@@ -1,4 +1,4 @@
-package io.github.newnc.service;
+package io.github.newnc.util;
 
 import java.util.ArrayList;
 
@@ -11,6 +11,8 @@ import com.google.gson.Gson;
 
 
 import com.google.gson.reflect.TypeToken;
+
+import io.github.newnc.model.RespostaFilmesAPI;
 
 public class PaginaFilmesObjeto implements JsonToJava {
 	

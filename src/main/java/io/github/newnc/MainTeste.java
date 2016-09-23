@@ -1,6 +1,11 @@
-package io.github.newnc.service;
+package io.github.newnc;
 
 import java.io.IOException;
+import java.util.List;
+
+import io.github.newnc.model.DadosFilmesAPI;
+import io.github.newnc.model.RespostaFilmesAPI;
+import io.github.newnc.util.PaginaFilmesObjeto;
 
 
 public class MainTeste {
@@ -13,9 +18,10 @@ public class MainTeste {
 	}
 
 	public static void imprimirListaFilmesPagina(RespostaFilmesAPI[] filmes){
-		for(int i = 0; i<filmes[0].results.size(); i++){ //posicao 0 porque só temos uma página por enquanto
-			System.out.println("Título: " + filmes[0].results.get(i).getTitle() + " - " + "Resenha: " 
-					+ filmes[0].results.get(i).getOverview());
+		List<DadosFilmesAPI> results = filmes[0].getResults();
+		for(int i = 0; i<results.size(); i++){ //posicao 0 porque só temos uma página por enquanto
+			System.out.println("Título: " + results.get(i).getTitle() + " - " + "Resenha: " 
+					+ results.get(i).getOverview());
 		}
 	}
 

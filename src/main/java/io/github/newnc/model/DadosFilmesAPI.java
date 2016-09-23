@@ -1,4 +1,4 @@
-package io.github.newnc.service;
+package io.github.newnc.model;
 
 public class DadosFilmesAPI {
 	//private String poster_path;
