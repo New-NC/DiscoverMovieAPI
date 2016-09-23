@@ -20,7 +20,7 @@ public class MainTeste {
 	public static void imprimirListaFilmesPagina(RespostaFilmesAPI[] filmes){
 		List<DadosFilmesAPI> results = filmes[0].getResults();
 		for(int i = 0; i<results.size(); i++){ //posicao 0 porque só temos uma página por enquanto
-			System.out.println("Título: " + results.get(i).getTitle() + " - " + "Resenha: " 
+			System.out.println("Título: " + results.get(i).getTitle() + " - " + "Resenha: "
 					+ results.get(i).getOverview());
 		}
 	}

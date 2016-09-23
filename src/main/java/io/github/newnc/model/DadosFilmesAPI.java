@@ -14,7 +14,7 @@ public class DadosFilmesAPI {
 	//private int vote_count;
 	//private String video;
 	//private int vote_average;
-	
+
 	public String getOverview() {
 		return overview;
 	}
@@ -39,8 +39,8 @@ public class DadosFilmesAPI {
 	public void setTitle(String title) {
 		this.title = title;
 	}
-	
-	
+
+
 	  @Override
 	    public String toString() { //converte o objeto para String
 	        return title + " - " + overview;
