@@ -1,5 +1,7 @@
 package io.github.newnc.service;
 
+import java.util.List;
+
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,7 +27,7 @@ public class FilmesService {
   @RequestMapping(value = "/filmes/{arquivoJson}", method = RequestMethod.GET)
   public RespostaFilmesAPI[] fromJsonFile(@PathVariable String arquivoJson) {
     PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto();
-		RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(arquivoJson);
+		RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto("/" + arquivoJson + ".json");
 
     return dadosFilmesAPI;
   }
