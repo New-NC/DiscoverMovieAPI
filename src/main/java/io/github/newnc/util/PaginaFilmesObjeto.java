@@ -15,21 +15,21 @@ import com.google.gson.reflect.TypeToken;
 import io.github.newnc.model.RespostaFilmesAPI;
 
 public class PaginaFilmesObjeto implements JsonToJava {
+
+	@Override
+	public RespostaFilmesAPI[] criarObjeto(String arquivoJson){
+		Gson gson = new Gson();
+		String jsonStr = adicionarColcheteJson(arquivoJson);
+		RespostaFilmesAPI[] dadosFilmesAPI = gson.fromJson(jsonStr , RespostaFilmesAPI[].class);
+		return dadosFilmesAPI;
+	}
 	
-	 @Override
-	 public RespostaFilmesAPI[] criarObjeto(String arquivoJson){
-		 Gson gson = new Gson();
-		 Reader reader = null;
-		try {
-			reader = new InputStreamReader(PaginaFilmesObjeto.class.getResourceAsStream(arquivoJson), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		 RespostaFilmesAPI[] dadosFilmesAPI = gson.fromJson(reader, RespostaFilmesAPI[].class);
-		 return dadosFilmesAPI;
-	 }
-	 
-	
+	public static String adicionarColcheteJson(String json){
+		StringBuilder jsonColchete = new StringBuilder(json);
+		jsonColchete.insert(0, '[');
+		jsonColchete.insert(jsonColchete.length(), ']');
+		return jsonColchete.toString();
+	}
+
+
 }
-	    
