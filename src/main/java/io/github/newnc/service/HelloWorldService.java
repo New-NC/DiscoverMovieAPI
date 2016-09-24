@@ -10,6 +10,6 @@ public class HelloWorldService {
   public String home() {
     return "We are up and running! "
       + "You ever watched Star Wars today? "
-      + "May be the force be with you!";
+      + "May be the force be with you!\n";
   }
 }

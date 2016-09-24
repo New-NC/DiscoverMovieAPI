@@ -10,32 +10,28 @@ import org.springframework.web.bind.annotation.RestController;
 import io.github.newnc.model.DadosFilmesAPI;
 import io.github.newnc.model.RespostaFilmesAPI;
 import io.github.newnc.util.PaginaFilmesObjeto;
+import io.github.newnc.util.TMDBRequester;
 
 @RestController
 public class FilmesService {
 
   @RequestMapping(value = "/filmes/", method = RequestMethod.GET)
-  public RespostaFilmesAPI[] fromJsonFile() {
-    String arquivoJson = "/teste.json";
+  public RespostaFilmesAPI[] doTMDB() {
+	String respostaDaAPI = TMDBRequester.requisitarPelaPagina(1);
 
-    PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto();
-		RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(arquivoJson);
+	PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto();
+	RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(respostaDaAPI);
 
-    return dadosFilmesAPI;
+	return dadosFilmesAPI;
   }
 
-  @RequestMapping(value = "/filmes/{arquivoJson}", method = RequestMethod.GET)
-  public RespostaFilmesAPI[] fromJsonFile(@PathVariable String arquivoJson) {
-    PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto();
-		RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto("/" + arquivoJson + ".json");
+  @RequestMapping(value = "/filmes/{page}", method = RequestMethod.GET)
+  public RespostaFilmesAPI[] doTMDBNaPagina(@PathVariable Integer page) {
+	String respostaDaAPI = TMDBRequester.requisitarPelaPagina(page);
 
-    return dadosFilmesAPI;
-  }
+	PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto();
+	RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(respostaDaAPI);
 
-  @RequestMapping(value = "/filmes/page/{page}", method = RequestMethod.GET)
-  public List<DadosFilmesAPI> getFilmesByPage(@PathVariable Integer page) {
-    List<DadosFilmesAPI> results = fromJsonFile()[page].getResults();
-
-    return results;
+	return dadosFilmesAPI;
   }
 }
