@@ -1,10 +1,6 @@
 package io.github.newnc;
 
-import java.io.BufferedReader;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.List;
 
 import com.mashape.unirest.http.HttpResponse;
@@ -14,17 +10,16 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponseAPI;
-import io.github.newnc.util.PaginaFilmesObjeto;
-import net.minidev.json.JSONObject;
+import io.github.newnc.util.JsonObject;
 
 
 public class MainTeste {
 	public static void main(String[] args) throws IOException {
 		String json = requisicaoAPI();
-		PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto(); 
+		JsonObject filmeJsonToJava = new JsonObject(); 
 		
 		//objeto criado a partir do JSON
-		MovieResponseAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(json);
+		MovieResponseAPI[] dadosFilmesAPI = filmeJsonToJava.createObject(json);
 		//System.out.println(dadosFilmesAPI[0]); //imprime a funcao toString
 		imprimirListaFilmesPagina(dadosFilmesAPI);
 		
