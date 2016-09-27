@@ -14,14 +14,14 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 
 import io.github.newnc.model.DadosFilmesAPI;
 import io.github.newnc.model.RespostaFilmesAPI;
-import io.github.newnc.util.PaginaFilmesObjeto;
+import io.github.newnc.util.JsonObject;
 import net.minidev.json.JSONObject;
 
 
 public class MainTeste {
 	public static void main(String[] args) throws IOException {
 		String json = requisicaoAPI();
-		PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto(); 
+		JsonObject filmeJsonToJava = new JsonObject(); 
 		RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(json); //objeto criado a partir do JSON
 		//System.out.println(dadosFilmesAPI[0]); //imprime a funcao toString
 		imprimirListaFilmesPagina(dadosFilmesAPI);
