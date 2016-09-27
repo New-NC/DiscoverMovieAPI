@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.github.newnc.model.DadosFilmesAPI;
 import io.github.newnc.model.RespostaFilmesAPI;
-import io.github.newnc.util.PaginaFilmesObjeto;
+import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.TMDBRequester;
 
 @RestController
@@ -19,7 +19,7 @@ public class FilmesService {
   public RespostaFilmesAPI[] doTMDB() {
 	String respostaDaAPI = TMDBRequester.requisitarPelaPagina(1);
 
-	PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto();
+	JsonObject filmeJsonToJava = new JsonObject();
 	RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(respostaDaAPI);
 
 	return dadosFilmesAPI;
@@ -29,7 +29,7 @@ public class FilmesService {
   public RespostaFilmesAPI[] doTMDBNaPagina(@PathVariable Integer page) {
 	String respostaDaAPI = TMDBRequester.requisitarPelaPagina(page);
 
-	PaginaFilmesObjeto filmeJsonToJava = new PaginaFilmesObjeto();
+	JsonObject filmeJsonToJava = new JsonObject();
 	RespostaFilmesAPI[] dadosFilmesAPI = filmeJsonToJava.criarObjeto(respostaDaAPI);
 
 	return dadosFilmesAPI;
