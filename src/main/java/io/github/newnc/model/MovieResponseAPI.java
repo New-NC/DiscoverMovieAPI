@@ -2,10 +2,13 @@ package io.github.newnc.model;
 
 import java.util.ArrayList;
 
-public class RespostaFilmesAPI {
+public class MovieResponseAPI {
+	// attributes
 	private int page;
-	private ArrayList<DadosFilmesAPI> results; //results = nome do campo no JSON
+	private ArrayList<MovieInfo> results; //results = nome do campo no JSON
 	
+	
+	// methods
 	public int getPage() {
 		return page;
 	}
@@ -14,19 +17,17 @@ public class RespostaFilmesAPI {
 		this.page = page;
 	}
 	
-	public ArrayList<DadosFilmesAPI> getResults() {
+	public ArrayList<MovieInfo> getResults() {
 		return results;
 	}
 
-	public void setResults(ArrayList<DadosFilmesAPI> results) {
+	public void setResults(ArrayList<MovieInfo> results) {
 		this.results = results;
 	}
 
 	@Override
     public String toString() { //converte o objeto para String
 		return page + " - " + "(" + results + ")";
-    }
-	
-	
+	}
 
 }
