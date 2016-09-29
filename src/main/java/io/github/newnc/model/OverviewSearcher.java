@@ -15,9 +15,11 @@ public class OverviewSearcher {
 	private ArrayList<MovieInfo> movies;
 	
 	public void execute(){
+		ArrayList<String> keyWordsList;
+		
 		for(MovieInfo movie: movies){
 			
-			ArrayList<String> keyWordsList = keyWords.getKeyWordsList();
+			keyWordsList = keyWords.getKeyWordsList();
 			
 			for(String key_word: keyWordsList){
 				if(movie.getOverview().toUpperCase().contains(key_word)){

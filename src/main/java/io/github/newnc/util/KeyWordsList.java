@@ -12,7 +12,7 @@ public class KeyWordsList {
 	public ArrayList<String> key_words;
 	
 	public KeyWordsList(){
-		key_words.add("MOTHA_FUCKING_DRAGONS");
+		key_words.add("MOTHA_FUCKIN_DRAGONS");
 		key_words.add("ROBOT");
 		key_words.add("PRINCESS");
 		key_words.add("PRINCE");
