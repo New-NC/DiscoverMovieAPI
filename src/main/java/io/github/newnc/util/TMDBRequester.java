@@ -8,6 +8,7 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 public class TMDBRequester {
 	
 	private static final String APIKEY = "988bfbce3f85f6688647dfb4f5d7a5a9";
+	public static final int MAXREQUEST = 30;
 	
 	public static String requestPage(int page){
 		try {
