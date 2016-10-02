@@ -14,7 +14,7 @@ import io.github.newnc.util.TMDBRequester;
 public class MoviesService {
 
 	@RequestMapping(value = "/movies/", method = RequestMethod.GET)
-	public MovieResponseAPI[] doTMDB() {
+	public MovieResponseAPI[] movies() {
 		MovieRepository repo = MovieRepository.getInstance();
 		repo.updateIfNeeded();
 
@@ -25,7 +25,7 @@ public class MoviesService {
 	}
 
 	@RequestMapping(value = "/movies/{page}", method = RequestMethod.GET)
-	public MovieResponseAPI[] doTMDBNaPagina(@PathVariable Integer page) {
+	public MovieResponseAPI[] moviesAtPage(@PathVariable Integer page) {
 		String apiRequest = TMDBRequester.requestPage(page);
 
 		JsonObject jsonObjectFactory = new JsonObject();
