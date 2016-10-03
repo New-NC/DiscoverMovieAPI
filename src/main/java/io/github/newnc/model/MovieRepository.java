@@ -57,10 +57,10 @@ public class MovieRepository extends AbstractRepository {
 	}
 	
 	/**
-	 * Returns an iterator for the list of <code>pages<code> of this <code>
+	 * Returns an iterator for the list of <code>pages</code> of this <code>
 	 * MovieRepository</code> instance.
 	 * 
-	 * @return an iterator for the list of <code>pages<code> of this <code>
+	 * @return an iterator for the list of <code>pages</code> of this <code>
 	 * MovieRepository</code> instance.
 	 */
 	public Iterator<MovieResponseAPI> getIterator() {
