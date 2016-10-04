@@ -17,6 +17,13 @@ public class MovieInfo {
 	 */
 	private String overview;
 	
+	/**
+	 * This field represents the image of the movie.
+	 */
+	private String poster_path;
+	
+	
+
 	/* 
 		classified genre of the movie.
 	*/
@@ -28,7 +35,6 @@ public class MovieInfo {
 	//private int id;
 	//private String original_title;
 	//private String original_language;
-	//private String backdrop_path;
 	//private String popularity;
 	//private int vote_count;
 	//private String video;
@@ -75,6 +81,26 @@ public class MovieInfo {
 		this.title = title;
 	}
 
+
+	
+	/**
+	 * Sets the <code>backdrop_path</code> of this <code>MovieInfo</code> instance.
+	 * 
+	 * @param title the <code>backdrop_path</code> of this <code>MovieInfo</code> instance.
+	 */
+	public String getPoster_path() {
+		return poster_path;
+	}
+
+	/**
+	 * Sets the <code>backdrop_path</code> of this <code>MovieInfo</code> instance.
+	 * 
+	 * @param title the <code>backdrop_path</code> of this <code>MovieInfo</code> instance.
+	 */
+	public void setPoster_path(String poster_path) {
+		this.poster_path = poster_path;
+	}
+	
 	/**
 	 * Returns a <code>String</code> representation of this <code>MovieInfo
 	 * </code> instance.
@@ -83,7 +109,7 @@ public class MovieInfo {
 	 * </code> instance.
 	 */
 	public String stringify() {
-	  return title + " - " + overview;
+	  return title + " - " + poster_path + " - " + overview;
     }
 	
 	public String getGenre(){

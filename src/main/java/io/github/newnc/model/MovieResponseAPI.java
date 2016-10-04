@@ -14,10 +14,16 @@ public class MovieResponseAPI {
 	 */
 	private int page;
 	
+	
+	/**
+	 * This field represents the total pages of the response.
+	 */
+	private int total_pages;
+	
 	/**
 	 * This field represents the list of movies in the response.
 	 */
-	private List<MovieInfo> movies;
+	private List<MovieInfo> results;
 	
 	/**
 	 * Returns the number of the page of response from TMDB API of this <code>
@@ -49,7 +55,7 @@ public class MovieResponseAPI {
 	 * <code>MovieResponseAPI</code> instance.
 	 */
 	public List<MovieInfo> getMovies() {
-		return movies;
+		return results;
 	}
 
 	/**
@@ -59,12 +65,20 @@ public class MovieResponseAPI {
 	 * @param movies the list of movies given by the request to TMDB API of this 
 	 * <code>MovieResponseAPI</code> instance.
 	 */
-	public void setMovies(ArrayList<MovieInfo> movies) {
-		this.movies = movies;
+	public void setMovies(ArrayList<MovieInfo> results) {
+		this.results = results;
 	}
 
 	public String stringify() {
-		return page + " - " + "(" + movies + ")";
+		return page + " - " + "(" + results + ")";
+	}
+
+	public int getTotal_pages() {
+		return total_pages;
+	}
+
+	public void setTotal_pages(int total_pages) {
+		this.total_pages = total_pages;
 	}
 
 }

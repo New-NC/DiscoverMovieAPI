@@ -19,8 +19,7 @@ public class MainTeste {
 		JsonObject filmeJsonToJava = new JsonObject(); 
 		
 		//objeto criado a partir do JSON
-		MovieResponseAPI[] dadosFilmesAPI = filmeJsonToJava.createObject(json);
-		//System.out.println(dadosFilmesAPI[0]); //imprime a funcao toString
+		MovieResponseAPI[] dadosFilmesAPI = filmeJsonToJava.createObject(json);		
 		imprimirListaFilmesPagina(dadosFilmesAPI);
 		
 	}
@@ -45,8 +44,8 @@ public class MainTeste {
 		List<MovieInfo> results = filmes[0].getMovies();
 		//posicao 0 porque só temos uma página por enquanto
 		for(int i = 0; i<results.size(); i++){
-			System.out.println("Título: " + results.get(i).getTitle() + " - " + "Resenha: "
-					+ results.get(i).getOverview());
+			System.out.println("Título: " + results.get(i).getTitle() + " - " + "Poster_path: " + 
+					results.get(i).getPoster_path() +  " - " + "Resenha: " + results.get(i).getOverview());
 		}
 	}
 
