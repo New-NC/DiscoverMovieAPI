@@ -1,7 +1,7 @@
 package io.github.newnc.model;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import io.github.newnc.util.KeyWordsList;
 
 /*
@@ -15,7 +15,7 @@ public class OverviewSearcher {
 	private ArrayList<MovieInfo> movies;
 	
 	public void execute(){
-		ArrayList<String> keyWordsList;
+		List<String> keyWordsList;
 		
 		for(MovieInfo movie: movies){
 			

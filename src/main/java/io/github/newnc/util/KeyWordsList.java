@@ -1,5 +1,6 @@
 package io.github.newnc.util;
 
+import java.util.List;
 import java.util.ArrayList;
 
 /*
@@ -9,9 +10,11 @@ import java.util.ArrayList;
 */
 
 public class KeyWordsList {
-	public ArrayList<String> key_words;
+	public List<String> key_words;
 	
 	public KeyWordsList(){
+		key_words = new ArrayList<String>();
+		
 		key_words.add("MOTHA_FUCKIN_DRAGONS");
 		key_words.add("ROBOT");
 		key_words.add("PRINCESS");
@@ -24,7 +27,7 @@ public class KeyWordsList {
 		// ETC...
 	}
 	
-	public ArrayList<String> getKeyWordsList(){
+	public List<String> getKeyWordsList(){
 		return key_words;
 	}
 	
