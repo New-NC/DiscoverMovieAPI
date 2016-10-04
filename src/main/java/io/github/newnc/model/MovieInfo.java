@@ -17,6 +17,11 @@ public class MovieInfo {
 	 */
 	private String overview;
 	
+	/* 
+		classified genre of the movie.
+	*/
+	private String genre;
+	
 	//private String poster_path;
 	//private boolean adult;
 	//private String release_date;
@@ -80,5 +85,13 @@ public class MovieInfo {
 	public String stringify() {
 	  return title + " - " + overview;
     }
+	
+	public String getGenre(){
+		return genre;
+	}
+	
+	public void setGenre(String g){
+		this.genre = g;
+	}
 
 }
