@@ -34,27 +34,8 @@ public class OverviewSearcher {
 				}
 			}
 			
-			/* count movie labels */
-			Collections.sort(keywords_by_movie);
-			String key_word_temp = keywords_by_movie.get(0);
-			int max=1, actual=0, count=0;
-			
-			for(int i=1; i<keywords_by_movie.size(); i++){
-				if(keywords_by_movie.get(i) != key_word_temp){
-					if(max < count){ /* gets the first one in draw scenario */
-						max = count;
-						actual = i;
-					}
-					count = 0;
-					key_word_temp = keywords_by_movie.get(i);
-				}
-				else{
-					count++;
-				}
-			}
-			
 			/* classify movie genre */
-			movie.setGenre(keywords_by_movie.get(actual));
+			movie.setGenre(keywords_by_movie);
 			
 		}
 

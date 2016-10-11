@@ -1,5 +1,7 @@
 package io.github.newnc.model;
 
+import java.util.List;
+
 /**
  * This class represents one movie and all information about that is given by 
  * the TMDB API. 
@@ -27,7 +29,7 @@ public class MovieInfo {
 	/* 
 		classified genre of the movie.
 	*/
-	private String genre;
+	private List<String> genre;
 	
 	//private String poster_path;
 	//private boolean adult;
@@ -112,12 +114,16 @@ public class MovieInfo {
 	  return title + " - " + poster_path + " - " + overview;
     }
 	
-	public String getGenre(){
+	public List<String> getGenre(){
 		return genre;
 	}
 	
-	public void setGenre(String g){
-		this.genre = g;
+	public String findGenre(String find){
+		return genre.get(genre.indexOf(find));
+	}
+	
+	public void setGenre(List<String> keywords_by_movie){
+		this.genre = keywords_by_movie;
 	}
 
 }
