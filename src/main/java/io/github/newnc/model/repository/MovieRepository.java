@@ -1,9 +1,11 @@
-package io.github.newnc.model;
+package io.github.newnc.model.repository;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import io.github.newnc.model.AbstractRepository;
+import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.TMDBRequester;
@@ -36,7 +38,7 @@ public class MovieRepository extends AbstractRepository {
 	/**
 	 * Default constructor.
 	 */
-	private MovieRepository() {
+	protected MovieRepository() {
 		pages = new ArrayList<>();
 		
 		addObserver(DataReloadTimer.getTimer());
@@ -45,7 +47,7 @@ public class MovieRepository extends AbstractRepository {
 	/**
 	 * This fields represents a list of pages of the response from TMDB API.
 	 */
-	private List<MovieResponseAPI> pages;
+	protected List<MovieResponseAPI> pages;
 	
 	/**
 	 * Returns a list of pages of this <code>MovieRepository</code> instance.

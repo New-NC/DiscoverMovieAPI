@@ -9,7 +9,7 @@ public class TMDBRequester {
 	
 	private static final String APIKEY = "988bfbce3f85f6688647dfb4f5d7a5a9";
 	public static final int MAXREQUEST = 30;
-	
+
 	public static String requestPage(int page){
 		try {
 			HttpResponse<JsonNode> response = 
@@ -21,8 +21,35 @@ public class TMDBRequester {
 		} catch (UnirestException e) {
 			e.printStackTrace();
 		}
-		return null;
-		
+		return null;	
+	}
+
+	public static String requestPageTopRated(int page) {
+		try {
+			HttpResponse<JsonNode> response = 
+					Unirest.get("https://api.themoviedb.org/3/discover/movie"
+							+ "?api_key=" + APIKEY
+							+ "&certification_country=US&certification.lte=G"
+							+ "&sort_by=vote_average.desc&page=" + page).asJson();
+			return response.getBody().toString();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		return null;	
+	}
+
+	public static String requestPageNewest(int page ){
+		try {
+			HttpResponse<JsonNode> response = 
+					Unirest.get("https://api.themoviedb.org/3/discover/movie"
+							+ "?api_key=" + APIKEY
+							+ "&certification_country=US&certification.lte=G"
+							+ "&sort_by=release_date.desc&page=" + page).asJson();
+			return response.getBody().toString();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		return null;	
 	}
 
 }
