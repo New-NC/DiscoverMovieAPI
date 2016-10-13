@@ -1,5 +1,9 @@
 package io.github.newnc.service;
 
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.http.HttpStatus;
@@ -8,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.model.repository.MovieRepository;
 import io.github.newnc.model.repository.NewestMovieRepository;
@@ -17,14 +22,23 @@ import io.github.newnc.util.TMDBRequester;
 
 @RestController
 public class MoviesService {
-
-	@RequestMapping(value = "/movies/", method = RequestMethod.GET)
-	public MovieResponseAPI[] movies() {
-		MovieRepository repo = NewestMovieRepository.getInstance();
-		repo.updateIfNeeded();
+	
+	private Set<MovieRepository> repositories;
+	
+	public MoviesService() {
+		repositories = new HashSet<>();
 		
-		repo = TopRatedMovieRepository.getInstance();
-		repo.updateIfNeeded();
+		repositories.add(NewestMovieRepository.getInstance());
+		repositories.add(TopRatedMovieRepository.getInstance());
+	}
+
+	@RequestMapping(value = "/movies", method = RequestMethod.GET)
+	public MovieResponseAPI[] movies() {
+		MovieRepository repo = null;
+		
+		Iterator<MovieRepository> repository = repositories.iterator();
+		while (repository.hasNext())
+			(repo = (MovieRepository) repository).updateIfNeeded();
 
 		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
 		movieData[0] = repo.getPage(1);
@@ -33,7 +47,7 @@ public class MoviesService {
 		return movieData;
 	}
 	
-	@RequestMapping(value = "/movies/covers/", method = RequestMethod.GET)
+	@RequestMapping(value = "/movies/covers", method = RequestMethod.GET)
 	public String[] covers(HttpServletResponse response) {
 		String[] covers = new String[2];
 
@@ -58,6 +72,22 @@ public class MoviesService {
 		}
 		
 		return covers;
+	}
+	
+	//@RequestMapping(value = "/movies/categories/{id}", method = RequestMethod.GET)
+	public String[] coversCategories(/*@PathVariable(value = "id")*/ Integer repositoryId ) {
+		String[] categories = new String[4];
+		
+		// TODO get categories from keywordlist and return a url to he cover 
+		// of movie of respective category
+		
+		return categories;
+	}
+	
+	public MovieInfo[] getResults() {
+		MovieInfo[] movies = new MovieInfo[5];
+		
+		return movies;
 	}
 
 	@RequestMapping(value = "/movies/{page}", method = RequestMethod.GET)
