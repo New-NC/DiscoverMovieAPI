@@ -6,6 +6,7 @@ import java.util.List;
 
 import io.github.newnc.model.AbstractRepository;
 import io.github.newnc.model.MovieResponseAPI;
+import io.github.newnc.model.OverviewSearcher;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.TMDBRequester;
@@ -18,31 +19,6 @@ import io.github.newnc.util.TMDBRequester;
  * @see <a href="http://www.oodesign.com/singleton-pattern.html">Singleton Pattern</a>
  */
 public class MovieRepository extends AbstractRepository {
-	
-	/**
-	 * This fields represents a instance of this class.
-	 */
-	private static MovieRepository instance;
-	
-	/**
-	 * Returns an instance of this class.
-	 * 
-	 * @return an instance of this class.
-	 */
-	public static MovieRepository getInstance() {
-		if (instance == null)
-			instance = new MovieRepository();
-		return instance;
-	}
-	
-	/**
-	 * Default constructor.
-	 */
-	protected MovieRepository() {
-		pages = new ArrayList<>();
-		
-		addObserver(DataReloadTimer.getTimer());
-	}
 	
 	/**
 	 * This fields represents a list of pages of the response from TMDB API.
@@ -92,9 +68,10 @@ public class MovieRepository extends AbstractRepository {
 			String apiResponse = TMDBRequester.requestPage(i);
 
 			JsonObject jsonObjectFactory = new JsonObject();
-			MovieResponseAPI[] movieData = jsonObjectFactory.createObject(apiResponse);
+			MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
+			movieData.setMovies(new OverviewSearcher().execute(movieData.getMovies()));
 			
-			pages.add(movieData[0]);
+			pages.add(movieData);
 		}
 		
 		setChanged();
@@ -125,6 +102,31 @@ public class MovieRepository extends AbstractRepository {
 	@Override
 	public boolean isEmpty() {
 		return pages.isEmpty();
+	}
+	
+	/**
+	 * This fields represents a instance of this class.
+	 */
+	private static MovieRepository instance;
+	
+	/**
+	 * Returns an instance of this class.
+	 * 
+	 * @return an instance of this class.
+	 */
+	public static MovieRepository getInstance() {
+		if (instance == null)
+			instance = new MovieRepository();
+		return instance;
+	}
+	
+	/**
+	 * Default constructor.
+	 */
+	protected MovieRepository() {
+		pages = new ArrayList<>();
+		
+		addObserver(DataReloadTimer.getTimer());
 	}
 
 }

@@ -1,8 +1,10 @@
 package io.github.newnc.service;
 
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,10 +25,10 @@ import io.github.newnc.util.TMDBRequester;
 @RestController
 public class MoviesService {
 	
-	private Set<MovieRepository> repositories;
+	private List<MovieRepository> repositories;
 	
 	public MoviesService() {
-		repositories = new HashSet<>();
+		repositories = new ArrayList<>();
 		
 		repositories.add(NewestMovieRepository.getInstance());
 		repositories.add(TopRatedMovieRepository.getInstance());
@@ -38,7 +40,7 @@ public class MoviesService {
 		
 		Iterator<MovieRepository> repository = repositories.iterator();
 		while (repository.hasNext())
-			(repo = (MovieRepository) repository).updateIfNeeded();
+			(repo = (MovieRepository) repository.next()).updateIfNeeded();
 
 		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
 		movieData[0] = repo.getPage(1);
@@ -49,24 +51,27 @@ public class MoviesService {
 	
 	@RequestMapping(value = "/movies/covers", method = RequestMethod.GET)
 	public String[] covers(HttpServletResponse response) {
-		String[] covers = new String[2];
+		String[] covers;
+		int numRepos = repositories.size();
+		
+		covers = new String[numRepos];
 
 		try {
-			covers[0] = TopRatedMovieRepository
-					.getInstance()
-					.getPage(1)
-					.getMovies()
-					.get(0)
-					.getPoster_path();
-			covers[1] = NewestMovieRepository
-					.getInstance()
-					.getPage(1)
-					.getMovies()
-					.get(0)
-					.getPoster_path();
+			for (int i = 0; i < numRepos; i++) {
+				covers[i] = repositories.get(i)
+						.getPage(1)
+						.getMovies()
+						.get(0)
+						.getPoster_path();
+			}
 			
-			if ((covers[0] == null || covers[0].isEmpty()) && (covers[1] == null || covers[1].isEmpty()))
-				response.setStatus(HttpStatus.SC_NO_CONTENT);
+			for (int i = 0; i < numRepos; i++) {
+				if (covers[i] == null || covers[i].isEmpty()) {
+					response.setStatus(HttpStatus.SC_NO_CONTENT);
+					
+					break;
+				}
+			}
 		} catch (NullPointerException npe) {
 			response.setStatus(HttpStatus.SC_NO_CONTENT);
 		}
@@ -74,12 +79,37 @@ public class MoviesService {
 		return covers;
 	}
 	
-	//@RequestMapping(value = "/movies/categories/{id}", method = RequestMethod.GET)
-	public String[] coversCategories(/*@PathVariable(value = "id")*/ Integer repositoryId ) {
-		String[] categories = new String[4];
-		
-		// TODO get categories from keywordlist and return a url to he cover 
-		// of movie of respective category
+	@RequestMapping(value = "/movies/categories/{id}", method = RequestMethod.GET)
+	public Map<String, String> coversCategories(HttpServletResponse response, @PathVariable(value = "id") Integer repositoryId ) {
+		Map<String, String> categories = new HashMap<String, String>();
+		System.out.println("/movies/categories/{id}");
+		try {
+			List<MovieInfo> movies = repositories.get(repositoryId).getPage(1).getMovies();
+			System.out.println("pegamos os filmes");
+			for (MovieInfo movie : movies) {
+				System.out.println(movie.stringify());
+				System.out.println("delicia");
+				List<String> genre = movie.getGenre();
+				System.out.println("delicia:" + genre.size());
+				if (genre != null) {
+					System.out.println("delicia");
+					//categories.put(genre.get(0), movie.getPoster_path());
+					System.out.println("@@@@@@@@@@@@@@@@@@@");
+					System.out.println(/*genre.get(0) +*/ " - " + movie.getPoster_path());
+					System.out.println("@@@@@@@@@@@@@@@@@@@");
+				} else
+					System.out.println("null");
+				
+				if (categories.size() == 4)
+					break;
+				else
+					System.out.println("manda mais delicia");
+				
+				System.out.println("delicia");
+			}
+		} catch (IndexOutOfBoundsException ioobe) {
+			response.setStatus(HttpStatus.SC_NO_CONTENT);
+		}
 		
 		return categories;
 	}

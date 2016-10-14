@@ -65,7 +65,7 @@ public class MovieResponseAPI {
 	 * @param movies the list of movies given by the request to TMDB API of this 
 	 * <code>MovieResponseAPI</code> instance.
 	 */
-	public void setMovies(ArrayList<MovieInfo> results) {
+	public void setMovies(List<MovieInfo> results) {
 		this.results = results;
 	}
 
