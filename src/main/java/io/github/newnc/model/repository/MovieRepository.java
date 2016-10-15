@@ -1,5 +1,6 @@
 package io.github.newnc.model.repository;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -61,7 +62,7 @@ public class MovieRepository extends AbstractRepository {
 	}
 	
 	@Override
-	protected void update() {
+	protected void update() throws Exception {
 		System.out.println("update " + System.currentTimeMillis());
 		
 		for (int i = 1; i <= TMDBRequester.MAXREQUEST; i++) {
@@ -69,7 +70,7 @@ public class MovieRepository extends AbstractRepository {
 
 			JsonObject jsonObjectFactory = new JsonObject();
 			MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
-			movieData.setMovies(new OverviewSearcher().execute(movieData.getMovies()));
+			movieData.setMovies(movieData.getMovies());
 			
 			pages.add(movieData);
 		}
@@ -79,13 +80,13 @@ public class MovieRepository extends AbstractRepository {
 	}
 	
 	@Override
-	public void updateIfNeeded() {
+	public void updateIfNeeded() throws Exception {
 		if (isEmpty())
 			update();
 	}
 	
 	@Override
-	public void forceUpdate() {
+	public void forceUpdate() throws Exception {
 		clear();
 		
 		update();

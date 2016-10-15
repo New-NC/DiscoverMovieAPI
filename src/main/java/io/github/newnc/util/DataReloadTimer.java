@@ -1,5 +1,6 @@
 package io.github.newnc.util;
 
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -47,7 +48,7 @@ public class DataReloadTimer<T extends AbstractRepository> implements Observer, 
 				
 				repository.forceUpdate();
 			}
-		} catch (InterruptedException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}

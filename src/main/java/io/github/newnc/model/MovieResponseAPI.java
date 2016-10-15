@@ -1,6 +1,6 @@
 package io.github.newnc.model;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -64,9 +64,10 @@ public class MovieResponseAPI {
 	 * 
 	 * @param movies the list of movies given by the request to TMDB API of this 
 	 * <code>MovieResponseAPI</code> instance.
+	 * @throws IOException 
 	 */
-	public void setMovies(List<MovieInfo> results) {
-		this.results = results;
+	public void setMovies(List<MovieInfo> results) throws Exception {
+		this.results = new OverviewSearcher().execute(results);
 	}
 
 	public String stringify() {

@@ -1,5 +1,6 @@
 package io.github.newnc.service;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -40,7 +41,11 @@ public class MoviesService {
 		
 		Iterator<MovieRepository> repository = repositories.iterator();
 		while (repository.hasNext())
-			(repo = (MovieRepository) repository.next()).updateIfNeeded();
+			try {
+				(repo = (MovieRepository) repository.next()).updateIfNeeded();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 
 		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
 		movieData[0] = repo.getPage(1);
@@ -85,20 +90,20 @@ public class MoviesService {
 		System.out.println("/movies/categories/{id}");
 		try {
 			List<MovieInfo> movies = repositories.get(repositoryId).getPage(1).getMovies();
-			System.out.println("pegamos os filmes");
+			System.out.println("pegamos " + movies.size() + " filmes");
 			for (MovieInfo movie : movies) {
 				System.out.println(movie.stringify());
 				System.out.println("delicia");
 				List<String> genre = movie.getGenre();
-				System.out.println("delicia:" + genre.size());
 				if (genre != null) {
-					System.out.println("delicia");
-					//categories.put(genre.get(0), movie.getPoster_path());
-					System.out.println("@@@@@@@@@@@@@@@@@@@");
-					System.out.println(/*genre.get(0) +*/ " - " + movie.getPoster_path());
-					System.out.println("@@@@@@@@@@@@@@@@@@@");
-				} else
-					System.out.println("null");
+					System.out.println("delicia:" + genre.size());
+					if (genre.size() > 0) {
+						categories.put(genre.get(0), movie.getPoster_path());
+						System.out.println("@@@@@@@@@@@@@@@@@@@");
+						System.out.println(genre.get(0) + " - " + movie.getPoster_path());
+						System.out.println("@@@@@@@@@@@@@@@@@@@");
+					}
+				}
 				
 				if (categories.size() == 4)
 					break;
@@ -132,13 +137,19 @@ public class MoviesService {
 
 	@RequestMapping(value = "/reload", method = RequestMethod.GET)
 	public void reload() {
-		NewestMovieRepository.getInstance().forceUpdate();
-		TopRatedMovieRepository.getInstance().forceUpdate();
+		Iterator<MovieRepository> repository = repositories.iterator();
+		while (repository.hasNext())
+			try {
+				((MovieRepository) repository.next()).forceUpdate();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 	
 	@RequestMapping(value = "/clear", method = RequestMethod.GET)
 	public void clear() {
-		NewestMovieRepository.getInstance().clear();;
-		TopRatedMovieRepository.getInstance().clear();
+		Iterator<MovieRepository> repository = repositories.iterator();
+		while (repository.hasNext())
+			((MovieRepository) repository.next()).clear();;
 	}
 }
