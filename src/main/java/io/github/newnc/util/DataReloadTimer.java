@@ -27,16 +27,20 @@ public class DataReloadTimer<T extends AbstractRepository> implements Observer, 
 		if (thread == null)
 			thread = new Thread(this);
 		
-		if (thread.isAlive()) {
-			thread.interrupt();
+		try {
+			if (thread.isAlive()) {
+				thread.interrupt();
+				
+				// if we don't instantiate thread here, JVM give us not friendly exception.
+				if (!repository.isEmpty())
+					thread = new Thread(this);
+			}
 			
-			// if we don't instantiate thread here, JVM give us not friendly exception.
-			if (!repository.isEmpty())
-				thread = new Thread(this);
+			thread.start();
+			System.out.println(thread.toString());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-		
-		thread.start();
-		System.out.println(thread.toString());
 	}
 	@Override
 	public void run() {

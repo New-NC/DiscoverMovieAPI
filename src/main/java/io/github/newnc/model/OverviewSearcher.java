@@ -11,18 +11,18 @@ import io.github.newnc.util.KeyWordsList;
 */
 
 public class OverviewSearcher {
-	
+
 	private KeyWordsList keyWords = new KeyWordsList();
 	private List<MovieInfo> movies = new ArrayList<>();
-	
+
 	public List<MovieInfo> execute(List<MovieInfo> m){
 		List<String> keyWordsList;
 		List<String> keywords_by_movie = new ArrayList<>();
 		this.movies = m;
-		
+
 		/* find movie keywords */
 		for(MovieInfo movie: movies){
-			
+
 			keyWordsList = keyWords.getKeyWordsList();
 			keywords_by_movie.clear();
 
@@ -40,19 +40,19 @@ public class OverviewSearcher {
 					movie.getTitle().toUpperCase().contains(" "+key_word+"S") ||
 					movie.getTitle().toUpperCase().contains(" "+key_word+"ES")
 				  ){
-					
+
 					keywords_by_movie.add(key_word);
-					
+
 					//System.out.println("Movie "+movie.getTitle()+" has key-word "+key_word);
 				}
 			}
-			
+
 			/* classify movie genre */
 			movie.setLabel(keywords_by_movie);
 
-			System.out.println("Movie: "+movie.getTitle()+"\tGenres: "+movie.getLabels());
+			//System.out.println("Movie: "+movie.getTitle()+"\tGenres: "+movie.getLabels());
 		}
-		
+
 		return movies;
 
 	}

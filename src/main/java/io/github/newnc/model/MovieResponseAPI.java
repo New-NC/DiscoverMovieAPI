@@ -4,31 +4,31 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * This class represents a response given by the TMDB API. 
+ * This class represents a response given by the TMDB API.
  *
  */
 public class MovieResponseAPI {
-	
+
 	/**
 	 * This field represents the page of the response.
 	 */
 	private int page;
-	
-	
+
+
 	/**
 	 * This field represents the total pages of the response.
 	 */
 	private int total_pages;
-	
+
 	/**
 	 * This field represents the list of movies in the response.
 	 */
 	private List<MovieInfo> results;
-	
+
 	/**
 	 * Returns the number of the page of response from TMDB API of this <code>
 	 * MovieResponseAPI</code> instance.
-	 * 	
+	 *
 	 * @return the number of the page of response from TMDB API of this <code>
 	 * MovieResponseAPI</code> instance.
 	 */
@@ -39,19 +39,19 @@ public class MovieResponseAPI {
 	/**
 	 * Sets the number of the page of response from TMDB API of this <code>
 	 * MovieResponseAPI</code> instance.
-	 * 
-	 * @param page the number of the page of response from TMDB API of this 
+	 *
+	 * @param page the number of the page of response from TMDB API of this
 	 * <code>MovieResponseAPI</code> instance.
 	 */
 	public void setPage(int page) {
 		this.page = page;
 	}
-	
+
 	/**
-	 * Returns the list of movies given by the request to TMDB API of this 
+	 * Returns the list of movies given by the request to TMDB API of this
 	 * <code>MovieResponseAPI</code> instance.
-	 * 
-	 * @return the list of movies given by the request to TMDB API of this 
+	 *
+	 * @return the list of movies given by the request to TMDB API of this
 	 * <code>MovieResponseAPI</code> instance.
 	 */
 	public List<MovieInfo> getMovies() {
@@ -59,18 +59,19 @@ public class MovieResponseAPI {
 	}
 
 	/**
-	 * Sets the list of movies given by the request to TMDB API of this 
+	 * Sets the list of movies given by the request to TMDB API of this
 	 * <code>MovieResponseAPI</code> instance.
-	 * 
-	 * @param movies the list of movies given by the request to TMDB API of this 
+	 *
+	 * @param movies the list of movies given by the request to TMDB API of this
 	 * <code>MovieResponseAPI</code> instance.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public void setMovies(List<MovieInfo> results) throws Exception {
 		this.results = new OverviewSearcher().execute(results);
-		
-		System.out.println("----- Teste -----");
-		System.out.println(results.get(0).getTitle() + " | " + results.get(0).getLabels());
+
+		System.out.println("----- Teste(setMovies) -----");
+		for (MovieInfo mi : this.results)
+		System.out.println(mi.getTitle() + " | " + mi.getLabels());
 	}
 
 	public String stringify() {
