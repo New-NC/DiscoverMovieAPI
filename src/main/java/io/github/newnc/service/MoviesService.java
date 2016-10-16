@@ -1,6 +1,5 @@
 package io.github.newnc.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -85,32 +84,36 @@ public class MoviesService {
 	}
 	
 	@RequestMapping(value = "/movies/categories/{id}", method = RequestMethod.GET)
-	public Map<String, String> coversCategories(HttpServletResponse response, @PathVariable(value = "id") Integer repositoryId ) {
+	public Map<String, String> coversCategories(HttpServletResponse response, @PathVariable("id") Integer repositoryId ) {
 		Map<String, String> categories = new HashMap<String, String>();
-		System.out.println("/movies/categories/{id}");
+		
+		System.out.println("/movies/categories/{id}="+repositoryId);
+		
 		try {
 			List<MovieInfo> movies = repositories.get(repositoryId).getPage(1).getMovies();
+			
 			System.out.println("pegamos " + movies.size() + " filmes");
+			
 			for (MovieInfo movie : movies) {
-				System.out.println(movie.stringify());
-				System.out.println("delicia");
-				List<String> genre = movie.getGenre();
-				if (genre != null) {
-					System.out.println("delicia:" + genre.size());
+				//System.out.println(movie.stringify());
+				System.out.println("--------------------");
+				System.out.println("Titulo: "+movie.getTitle());
+				List<String> genre = movie.getLabels();
+				
+				System.out.println("Labels: " + genre);
+				
+				if(genre != null){
+					System.out.println("qtde labels: " + genre.size());
 					if (genre.size() > 0) {
 						categories.put(genre.get(0), movie.getPoster_path());
-						System.out.println("@@@@@@@@@@@@@@@@@@@");
-						System.out.println(genre.get(0) + " - " + movie.getPoster_path());
-						System.out.println("@@@@@@@@@@@@@@@@@@@");
+						System.out.println(genre.get(0) + " - " + movie.getPoster_path()+"\n");
 					}
 				}
 				
 				if (categories.size() == 4)
 					break;
 				else
-					System.out.println("manda mais delicia");
-				
-				System.out.println("delicia");
+					System.out.println("< 4");
 			}
 		} catch (IndexOutOfBoundsException ioobe) {
 			response.setStatus(HttpStatus.SC_NO_CONTENT);

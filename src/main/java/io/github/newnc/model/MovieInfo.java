@@ -29,7 +29,7 @@ public class MovieInfo {
 	/* 
 		classified genre of the movie.
 	*/
-	private List<String> genre;
+	private List<String> labels;
 	
 	//private String poster_path;
 	//private boolean adult;
@@ -51,7 +51,7 @@ public class MovieInfo {
 	 * instance.
 	 */
 	public String getOverview() {
-		return overview;
+		return this.overview;
 	}
 
 	/**
@@ -71,7 +71,8 @@ public class MovieInfo {
 	 * @return the <code>title</code> of this <code>MovieInfo</code> instance.
 	 */
 	public String getTitle() {
-		return title;
+		System.out.println("MovieInfo::getTile " + title);
+		return this.title;
 	}
 
 	/**
@@ -91,7 +92,7 @@ public class MovieInfo {
 	 * @param title the <code>backdrop_path</code> of this <code>MovieInfo</code> instance.
 	 */
 	public String getPoster_path() {
-		return poster_path;
+		return this.poster_path;
 	}
 
 	/**
@@ -114,16 +115,17 @@ public class MovieInfo {
 	  return title + " - " + poster_path + " - " + overview;
     }
 	
-	public List<String> getGenre(){
-		return genre;
+	public List<String> getLabels(){
+		System.out.println("MovieInfo::Sizelabel "+labels.size());
+		return this.labels;
 	}
 	
-	public String findGenre(String find){
-		return genre.get(genre.indexOf(find));
+	public String findLabel(String find){
+		return this.labels.get(this.labels.indexOf(find));
 	}
 	
-	public void setGenre(List<String> keywords_by_movie){
-		this.genre = keywords_by_movie;
+	public void setLabel(List<String> labels){
+		this.labels = labels;
 	}
 
 }

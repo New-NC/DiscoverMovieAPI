@@ -68,6 +68,9 @@ public class MovieResponseAPI {
 	 */
 	public void setMovies(List<MovieInfo> results) throws Exception {
 		this.results = new OverviewSearcher().execute(results);
+		
+		System.out.println("----- Teste -----");
+		System.out.println(results.get(0).getTitle() + " | " + results.get(0).getLabels());
 	}
 
 	public String stringify() {

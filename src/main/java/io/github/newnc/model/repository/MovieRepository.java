@@ -1,13 +1,11 @@
 package io.github.newnc.model.repository;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import io.github.newnc.model.AbstractRepository;
 import io.github.newnc.model.MovieResponseAPI;
-import io.github.newnc.model.OverviewSearcher;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.TMDBRequester;
@@ -66,13 +64,18 @@ public class MovieRepository extends AbstractRepository {
 		System.out.println("update " + System.currentTimeMillis());
 		
 		for (int i = 1; i <= TMDBRequester.MAXREQUEST; i++) {
+			System.out.println("Get page: "+i);
+			
 			String apiResponse = TMDBRequester.requestPage(i);
 
 			JsonObject jsonObjectFactory = new JsonObject();
 			MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
 			movieData.setMovies(movieData.getMovies());
-			
+
 			pages.add(movieData);
+			
+			System.out.println("---- Teste -----");
+			System.out.println(movieData.getMovies().get(0).getLabels());
 		}
 		
 		setChanged();
