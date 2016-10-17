@@ -11,6 +11,7 @@ public class TMDBRequester {
 	public static final int MAXREQUEST = 30;
 
 	public static String requestPage(int page){
+		System.out.println("requestPage("+page+")");
 		try {
 			HttpResponse<JsonNode> response = 
 					Unirest.get("https://api.themoviedb.org/3/discover/movie"

@@ -24,6 +24,8 @@ public class MovieResponseAPI {
 	 * This field represents the list of movies in the response.
 	 */
 	private List<MovieInfo> results;
+	
+	private OverviewSearcher ovs = new OverviewSearcher();
 
 	/**
 	 * Returns the number of the page of response from TMDB API of this <code>
@@ -67,11 +69,14 @@ public class MovieResponseAPI {
 	 * @throws IOException
 	 */
 	public void setMovies(List<MovieInfo> results) throws Exception {
-		this.results = new OverviewSearcher().execute(results);
+		/* busca nas resenhas e classificacao das labels */
+		ovs.execute(results);
 
-		System.out.println("----- Teste(setMovies) -----");
-		for (MovieInfo mi : this.results)
-		System.out.println(mi.getTitle() + " | " + mi.getLabels());
+		if(debug){
+			System.out.println("----- Teste(setMovies) -----");
+			for (MovieInfo mi : this.results)
+				System.out.println(mi.getTitle() + " | " + mi.getLabels());
+		}
 	}
 
 	public String stringify() {
@@ -85,5 +90,7 @@ public class MovieResponseAPI {
 	public void setTotal_pages(int total_pages) {
 		this.total_pages = total_pages;
 	}
+	
+	private boolean debug = true;
 
 }

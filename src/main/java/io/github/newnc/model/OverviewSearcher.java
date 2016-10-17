@@ -12,16 +12,19 @@ import io.github.newnc.util.KeyWordsList;
 
 public class OverviewSearcher {
 
-	private KeyWordsList keyWords = new KeyWordsList();
-	private List<MovieInfo> movies = new ArrayList<>();
+	private KeyWordsList keyWords;
+	private boolean debug = false;
+	
+	public OverviewSearcher(){
+		keyWords = new KeyWordsList();
+	}
 
-	public List<MovieInfo> execute(List<MovieInfo> m){
+	public void execute(List<MovieInfo> movies){
 		List<String> keyWordsList;
 		List<String> keywords_by_movie = new ArrayList<>();
-		this.movies = m;
 
 		/* find movie keywords */
-		for(MovieInfo movie: movies){
+		for(int i=0; i < movies.size(); i++){
 
 			keyWordsList = keyWords.getKeyWordsList();
 			keywords_by_movie.clear();
@@ -29,31 +32,30 @@ public class OverviewSearcher {
 			// This doesn't cover everything (fairies or ponies, for example), but it's good
 			for(String key_word: keyWordsList){
 				if(
-					movie.getOverview().toUpperCase().contains(" "+key_word+" ") ||
-					movie.getOverview().toUpperCase().contains(" "+key_word+".") ||
-					movie.getOverview().toUpperCase().contains(" "+key_word+",") ||
-					movie.getOverview().toUpperCase().contains(" "+key_word+"S") ||
-					movie.getOverview().toUpperCase().contains(" "+key_word+"ES") ||
-					movie.getOverview().toUpperCase().contains(" "+key_word+"AGE") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+" ") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+".") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+",") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"S") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"ES") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"AGE") ||
 					// Added title search, 'cause reasons.
-					movie.getTitle().toUpperCase().contains(" "+key_word+" ") ||
-					movie.getTitle().toUpperCase().contains(" "+key_word+"S") ||
-					movie.getTitle().toUpperCase().contains(" "+key_word+"ES")
+					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+" ") ||
+					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"S") ||
+					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"ES")
 				  ){
 
 					keywords_by_movie.add(key_word);
 
-					//System.out.println("Movie "+movie.getTitle()+" has key-word "+key_word);
+					// System.out.println("Movie "+movie.getTitle()+" has key-word "+key_word);
 				}
 			}
 
 			/* classify movie genre */
-			movie.setLabel(keywords_by_movie);
+			movies.get(i).setLabel(keywords_by_movie);
 
-			//System.out.println("Movie: "+movie.getTitle()+"\tGenres: "+movie.getLabels());
+			if(debug) System.out.println("Movie: "+movies.get(i).getTitle()+
+							"\tGenres: "+movies.get(i).getLabels());
 		}
-
-		return movies;
 
 	}
 }

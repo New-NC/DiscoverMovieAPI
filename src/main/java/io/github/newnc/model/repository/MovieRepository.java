@@ -53,15 +53,17 @@ public class MovieRepository extends AbstractRepository {
 	 * </code> instance.
 	 */
 	public MovieResponseAPI getPage(int numPage) {
-		for (MovieResponseAPI page : pages)
-			if (page.getPage() == numPage)
-				return page;
+		int i;
+		for (i=0; i<pages.size(); i++)
+			if (pages.get(i).getPage() == numPage)
+				return pages.get(i);
+		
 		return null;
 	}
 
 	@Override
 	protected void update() throws Exception {
-		System.out.println("update " + System.currentTimeMillis());
+		System.out.println("CALLED: update() " + System.currentTimeMillis());
 
 		for (int i = 1; i <= TMDBRequester.MAXREQUEST; i++) {
 			System.out.println("Get page: "+i);
@@ -86,6 +88,7 @@ public class MovieRepository extends AbstractRepository {
 
 	@Override
 	public void updateIfNeeded() throws Exception {
+		if(debug) System.out.println("updateIfNeeded() "+this.getClass());
 		if (isEmpty())
 			update();
 	}
@@ -134,5 +137,7 @@ public class MovieRepository extends AbstractRepository {
 
 		addObserver(DataReloadTimer.getTimer());
 	}
+	
+	private boolean debug = true;
 
 }

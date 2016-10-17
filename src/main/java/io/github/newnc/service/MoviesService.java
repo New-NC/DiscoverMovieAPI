@@ -26,6 +26,8 @@ import io.github.newnc.util.TMDBRequester;
 public class MoviesService {
 
 	private List<MovieRepository> repositories;
+	
+	private boolean debug = true;
 
 	public MoviesService() {
 		repositories = new ArrayList<>();
@@ -36,26 +38,21 @@ public class MoviesService {
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)
 	public MovieResponseAPI[] movies() {
-		MovieRepository repo = null;
-
-		Iterator<MovieRepository> repository = repositories.iterator();
-		while (repository.hasNext())
+		if(debug) System.out.println("movies()");
+		
+		int i;
+		
+		for(i = 0; i < repositories.size(); i++){
 			try {
-				repo = repository.next();
-
-				if (repo instanceof NewestMovieRepository)
-					((NewestMovieRepository) repo).updateIfNeeded();
-				else if (repo instanceof TopRatedMovieRepository)
-					((TopRatedMovieRepository) repo).updateIfNeeded();
-				else
-					((MovieRepository) repo).updateIfNeeded();
+				repositories.get(i).updateIfNeeded();;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
 
 		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
-		movieData[0] = repo.getPage(1);
-		System.out.println("AEHOOO!!");
+		movieData[0] = repositories.get(i-1).getPage(1);
+		if(debug) System.out.println("AEHOOO!!");
 
 		return movieData;
 	}

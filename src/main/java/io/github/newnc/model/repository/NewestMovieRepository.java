@@ -11,12 +11,16 @@ import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.TMDBRequester;
 
 public class NewestMovieRepository extends MovieRepository {
+	
+	private boolean debug = true;
 
 	@Override
 	protected void update() throws Exception {
 		System.out.println("update " + System.currentTimeMillis());
 
-		for (int i = 1; i <= TMDBRequester.MAXREQUEST / 2; i++) {
+		int i;
+		
+		for (i = 1; i <= TMDBRequester.MAXREQUEST / 2; i++) {
 			String apiResponse = TMDBRequester.requestPageNewest(i);
 
 			JsonObject jsonObjectFactory = new JsonObject();
@@ -24,15 +28,61 @@ public class NewestMovieRepository extends MovieRepository {
 			List<MovieInfo> movies = movieData.getMovies();
 			movieData.setMovies(movies);
 			
-			for(int j = 1; i <= movies.size(); j++){
+			for(MovieInfo movie : movies){
 				/*Foram adicionadas 4 listas no AbstractRepository
 				 * Aqui, precisa iterar por todos os filmes e dependendo da label
 				 * colocar na lista adequada. Assim, teremos uma lista com filmes de aventura,
 				 * animal, tecnologia e princesa.
 				 */
+				
+				List<String> labels = movie.getLabels();
+				
+				if(debug)
+					System.out.println("Movie "+movie.getTitle()+" has "+labels.size()+" labels");
+				
+				for(String label: labels){
+					if( label.equals("DOG") ||
+						label.equals("PONY") ||
+						labels.equals("FISH") ||
+						labels.equals("LION") ||
+						labels.equals("CAT")
+							){
+						/* Animal */
+						listAnimal.add(movie.getId());
+						
+					}
+					else if( labels.equals("ROBOT") ||
+							 labels.equals("RACE CAR") ||
+							 labels.equals("MONSTER")
+							){
+						
+						/* Tech */
+						listTech.add(movie.getId());
+					}
+					else if( labels.equals("PRINCESS") ||
+							 labels.equals("PRINCE") ||
+							 labels.equals("UNICORN") ||
+							 labels.equals("FAIRY") ||
+							 labels.equals("DWARF")
+							){
+						
+						/* Princess */
+						listPrincess.add(movie.getId());
+					}
+					else if( labels.equals("FRIENDSHIP") ||
+							 labels.equals("DRAGON") ||
+							 labels.equals("TOY")
+							){
+						
+						/* Adventure */
+						listAdventure.add(movie.getId());
+					}
+				}
 			}
 
 			pages.add(movieData);
+			
+			if(debug) printLists(movies);
 		}
 
 		setChanged();
@@ -64,5 +114,29 @@ public class NewestMovieRepository extends MovieRepository {
 		pages = new ArrayList<>();
 
 		addObserver(DataReloadTimer.getTimer());
+	}
+	
+	public void printLists(List<MovieInfo> movies){
+		System.out.println("listAdventure");
+		if(listAdventure.size() > 0)
+			for(int i : listAdventure){
+				System.out.println(movies.get(i).getTitle());
+			}
+		System.out.println("\nlistAnimal");
+		if(listAdventure.size() > 0)
+			for(int i : listAnimal){
+				System.out.println(movies.get(i).getTitle());
+			}
+		System.out.println("\nlistPrincess");
+		if(listPrincess.size() > 0)
+			for(int i : listPrincess){
+				System.out.println(movies.get(i).getTitle());
+			}
+		System.out.println("\nlistTech");
+		if(listTech.size() > 0)
+			for(int i : listTech){
+				System.out.println(movies.get(i).getTitle());
+			}
+		System.out.println("");
 	}
 }
