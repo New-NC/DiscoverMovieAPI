@@ -1,6 +1,8 @@
 package io.github.newnc.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Observable;
 
 /**
@@ -9,6 +11,11 @@ import java.util.Observable;
  *
  */
 public abstract class AbstractRepository extends Observable {
+	protected List<Integer> listAnimal    = new ArrayList<Integer>();
+	protected List<Integer> listTech	  = new ArrayList<Integer>();
+	protected List<Integer> listPrincess  = new ArrayList<Integer>();
+	protected List<Integer> listAdventure = new ArrayList<Integer>();
+	
 	
 	/**
 	 * Updates the data of the repository.

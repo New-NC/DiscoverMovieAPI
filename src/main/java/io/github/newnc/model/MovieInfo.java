@@ -25,7 +25,10 @@ public class MovieInfo {
 	 */
 	private String poster_path;
 
-
+	/**
+	 * This field represents the id of the movie.
+	 */
+	private int id;
 
 	/*
 		classified genre of the movie.
@@ -35,7 +38,7 @@ public class MovieInfo {
 	//private String poster_path;
 	//private boolean adult;
 	//private String release_date;
-	//private int id;
+	
 	//private String original_title;
 	//private String original_language;
 	//private String popularity;
@@ -127,6 +130,14 @@ public class MovieInfo {
 
 	public void setLabel(List<String> labels){
 		this.labels = labels;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
