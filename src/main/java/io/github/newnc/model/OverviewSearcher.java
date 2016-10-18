@@ -14,7 +14,7 @@ public class OverviewSearcher {
 
 	private KeyWordsList keyWords;
 	private boolean debug = false;
-	
+
 	public OverviewSearcher(){
 		keyWords = new KeyWordsList();
 	}
@@ -33,7 +33,7 @@ public class OverviewSearcher {
 			// This doesn't cover everything (fairies or ponies, for example), but it's good
 			for(String key_word: keyWordsList){
 				if(
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+" ") ||
+					(movies.get(i).getOverview().toUpperCase().contains(" "+key_word+" ") /*||
 					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+".") ||
 					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+",") ||
 					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"S ") ||
@@ -42,7 +42,15 @@ public class OverviewSearcher {
 					// Added title search, 'cause reasons.
 					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+" ") ||
 					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"S") ||
-					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"ES")
+					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"ES")*/)
+					// Black list
+					/*&& !movies.get(i).getTitle().toUpperCase().contains(" SATAN ")
+					&& !movies.get(i).getTitle().toUpperCase().contains(" SEX ")
+					&& !movies.get(i).getTitle().toUpperCase().contains(" DRUGS ")
+					&& !movies.get(i).getTitle().toUpperCase().contains(" SEXIEST ")
+					&& !movies.get(i).getTitle().toUpperCase().contains(" BITCH ")
+					&& !movies.get(i).getTitle().toUpperCase().contains(" JEWISH ")
+					&& !movies.get(i).getTitle().toUpperCase().contains(" PREY ")*/
 				  ){
 
 					keywords_by_movie.add(key_word);
@@ -57,7 +65,7 @@ public class OverviewSearcher {
 			if(debug) System.out.println("Movie: "+movies.get(i).getTitle()+
 							"\tGenres: "+movies.get(i).getLabels());
 		}
-		
+
 		return movies;
 
 	}

@@ -19,17 +19,17 @@ public class TopRatedMovieRepository extends MovieRepository {
 		while (this.listAdventure.isEmpty() || this.listAnimal.isEmpty() || this.listPrincess.isEmpty() || this.listTech.isEmpty()) {
 			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
 				String apiResponse = TMDBRequester.requestPageTopRated(i);
-	
+
 				JsonObject jsonObjectFactory = new JsonObject();
 				MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
 				List<MovieInfo> movies = movieData.getMovies();
 				movieData.setMovies(movies);
-	
+
 				List<Integer> listAdventure = null;//new ArrayList<Integer>();
 				List<Integer> listAnimal = null;//new ArrayList<Integer>();
 				List<Integer> listPrincess = null;//new ArrayList<Integer>();
 				List<Integer> listTech = null;//new ArrayList<Integer>();
-	
+
 				if (movieData != null && movieData.getMovies() != null)
 					for (MovieInfo movie : movieData.getMovies()) {
 						/*
@@ -49,7 +49,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 							if (debug)
 								System.out.println(">>>>>>>> " + label);
 							if (label.equals("DOG") || label.equals("PONY") || label.equals("FISH")
-									|| label.equals("LION") || label.equals("CAT")) {
+									|| label.equals("LION") || label.equals("CAT") || label.equals("SNOOPY")) {
 								/* Animal */
 								if (debug)
 									System.out.println("<<<<<<< Animal :: " + movieData.getMovies().indexOf(movie));
@@ -173,11 +173,11 @@ public class TopRatedMovieRepository extends MovieRepository {
 						System.out.println("=======================");
 					}
 				}
-	
+
 				pages.add(movieData);
 				//if (debug)
 					//printLists();
-	
+
 				i++;
 			}
 			j++;

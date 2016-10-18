@@ -61,7 +61,7 @@ public class NewestMovieRepository extends MovieRepository {
 							if (debug)
 								System.out.println(">>>>>>>> " + label);
 							if (label.equals("DOG") || label.equals("PONY") || label.equals("FISH")
-									|| label.equals("LION") || label.equals("CAT")) {
+									|| label.equals("LION") || label.equals("CAT") || label.equals("SNOOPY")) {
 								/* Animal */
 								if (debug)
 									System.out.println("<<<<<<< Animal :: " + movieData.getMovies().indexOf(movie));

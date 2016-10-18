@@ -152,8 +152,12 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listAdventure.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					covers[0] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-					break;
+					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("JUNGLE") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("ADVENTURE") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("MICKEY")) {
+						covers[0] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
+						break;
+					}
+					//System.out.println("Adventure: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
 				}
 
 			if (covers[0] != null && !covers[0].isEmpty())
@@ -165,9 +169,13 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listAnimal.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-					break;
+					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SCOOBY")){ //|| pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SNOOPY") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("GARFIELD")) {
+						covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
+						break;
+					}
 				}
+				//System.out.println("#");
 
 			if (covers[1] != null && !covers[1].isEmpty())
 				break;
@@ -178,8 +186,11 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listPrincess.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					covers[2] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-					break;
+					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("BEAUTY") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("MERMAID") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("LITTLE")) {
+						covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
+						break;
+					}
 				}
 
 			if (covers[2] != null && !covers[2].isEmpty())
@@ -191,8 +202,11 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listTech.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					covers[3] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-					break;
+					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("WALL") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SPACE") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("APES")) {
+						covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
+						break;
+					}
 				}
 
 			if (covers[3] != null && !covers[3].isEmpty())
@@ -224,7 +238,7 @@ public class MovieRepository extends AbstractRepository {
 			return null;
 		}
 		System.out.println(bucketMap);
-		
+
 		int i = -1;
 		for (Integer j : bucketMap.keySet()) {
 			System.out.println("j="+j);
@@ -237,9 +251,9 @@ public class MovieRepository extends AbstractRepository {
 						covers[i] = pages.get(j).getMovies().get(k.intValue()).getPoster_path();
 						System.out.println("i=" + i + " :: " + covers[i]);
 					}
-					
+
 					i++;
-					
+
 					if (i == 5)
 						break;
 				}
