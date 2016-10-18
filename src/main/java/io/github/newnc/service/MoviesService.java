@@ -1,10 +1,8 @@
 package io.github.newnc.service;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.model.repository.MovieRepository;
 import io.github.newnc.model.repository.NewestMovieRepository;
@@ -104,8 +101,21 @@ public class MoviesService {
 		return new String[4];
 	}
 
-	public String[] getResults() {
+	@RequestMapping(value = "/movies/results/{repo}/{genre}", method = RequestMethod.GET)
+	public String[] getResults(@PathVariable("repo") Integer repositoryId, @PathVariable("genre") Integer genreId) {
+		System.out.println("/movies/results/{repo}="+repositoryId+"/{genre}="+genreId);
+		
 		String[] moviesCovers = new String[5];
+		
+		MovieRepository repo = null;
+		if (repositoryId == 0)
+			repo = (NewestMovieRepository) repositories.get(repositoryId);
+		else if (repositoryId == 1)
+			repo = (TopRatedMovieRepository) repositories.get(repositoryId);
+		
+		if (repo != null) {
+			return repo.getCoversFromBucket(genreId);
+		}
 
 		return moviesCovers;
 	}

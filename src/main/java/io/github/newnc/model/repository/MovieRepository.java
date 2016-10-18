@@ -3,6 +3,7 @@ package io.github.newnc.model.repository;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import io.github.newnc.model.AbstractRepository;
 import io.github.newnc.model.MovieResponseAPI;
@@ -15,7 +16,8 @@ import io.github.newnc.util.TMDBRequester;
  *
  * This class implements the singleton pattern.
  *
- * @see <a href="http://www.oodesign.com/singleton-pattern.html">Singleton Pattern</a>
+ * @see <a href="http://www.oodesign.com/singleton-pattern.html">Singleton
+ *      Pattern</a>
  */
 public class MovieRepository extends AbstractRepository {
 
@@ -48,16 +50,17 @@ public class MovieRepository extends AbstractRepository {
 	 * Returns a specific <code>page</code> of this <code>MovieRepository
 	 * </code> instance.
 	 *
-	 * @param numPage the number of the <code>page</code>.
+	 * @param numPage
+	 *            the number of the <code>page</code>.
 	 * @return a specific <code>page</code> of this <code>MovieRepository
 	 * </code> instance.
 	 */
 	public MovieResponseAPI getPage(int numPage) {
 		int i;
-		for (i=0; i<pages.size(); i++)
+		for (i = 0; i < pages.size(); i++)
 			if (pages.get(i).getPage() == numPage)
 				return pages.get(i);
-		
+
 		return null;
 	}
 
@@ -66,7 +69,7 @@ public class MovieRepository extends AbstractRepository {
 		System.out.println("CALLED: update() " + System.currentTimeMillis());
 
 		for (int i = 1; i <= TMDBRequester.MAXREQUEST; i++) {
-			System.out.println("Get page: "+i);
+			System.out.println("Get page: " + i);
 
 			String apiResponse = TMDBRequester.requestPage(i);
 
@@ -88,7 +91,8 @@ public class MovieRepository extends AbstractRepository {
 
 	@Override
 	public void updateIfNeeded() throws Exception {
-		if(debug) System.out.println("updateIfNeeded() "+this.getClass());
+		if (debug)
+			System.out.println("updateIfNeeded() " + this.getClass());
 		if (isEmpty())
 			update();
 	}
@@ -137,60 +141,112 @@ public class MovieRepository extends AbstractRepository {
 
 		addObserver(DataReloadTimer.getTimer());
 	}
-	
+
 	private boolean debug = true;
 
 	public String[] getOneCoverbyBucket() {
 		String[] covers = new String[4];
 
 		covers[0] = "";
-		for (int i = 0; i < listAdventure.size(); i++) {
+		for (int i : listAdventure.keySet()) {
 			List<Integer> list = listAdventure.get(i);
 			if (list != null)
 				for (Integer j : list) {
 					covers[0] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
 					break;
 				}
-			
-			if (covers[0] != null && !covers[0].isEmpty()) break;
+
+			if (covers[0] != null && !covers[0].isEmpty())
+				break;
 		}
 
 		covers[1] = "";
-		for (int i = 0; i < listAnimal.size(); i++) {
+		for (int i : listAnimal.keySet()) {
 			List<Integer> list = listAnimal.get(i);
 			if (list != null)
 				for (Integer j : list) {
 					covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
 					break;
 				}
-			
-			if (covers[1] != null && !covers[1].isEmpty()) break;
+
+			if (covers[1] != null && !covers[1].isEmpty())
+				break;
 		}
 
 		covers[2] = "";
-		for (int i = 0; i < listPrincess.size(); i++) {
+		for (int i : listPrincess.keySet()) {
 			List<Integer> list = listPrincess.get(i);
 			if (list != null)
 				for (Integer j : list) {
 					covers[2] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
 					break;
 				}
-			
-			if (covers[2] != null && !covers[2].isEmpty()) break;
+
+			if (covers[2] != null && !covers[2].isEmpty())
+				break;
 		}
 
 		covers[3] = "";
-		for (int i = 0; i < listTech.size(); i++) {
+		for (int i : listTech.keySet()) {
 			List<Integer> list = listTech.get(i);
 			if (list != null)
 				for (Integer j : list) {
 					covers[3] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
 					break;
 				}
-			
-			if (covers[3] != null && !covers[3].isEmpty()) break;
+
+			if (covers[3] != null && !covers[3].isEmpty())
+				break;
 		}
+
+		return covers;
+	}
+
+	public String[] getCoversFromBucket(Integer genreId) {
+		System.out.println("getCoversFromBucket(" + genreId + ")");
+		String[] covers = new String[5];
+
+		Map<Integer, List<Integer>> bucketMap;
+		switch (genreId) {
+		case 0:
+			bucketMap = listAdventure;
+			break;
+		case 1:
+			bucketMap = listAnimal;
+			break;
+		case 2:
+			bucketMap = listPrincess;
+			break;
+		case 3:
+			bucketMap = listTech;
+			break;
+		default:
+			return null;
+		}
+		System.out.println(bucketMap);
 		
+		int i = -1;
+		for (Integer j : bucketMap.keySet()) {
+			System.out.println("j="+j);
+			List<Integer> list = bucketMap.get(j);
+			if (list != null)
+				for (Integer k : list) {
+					System.out.println("k="+k);
+					System.out.println("i="+i);
+					if (i >= 0) {
+						covers[i] = pages.get(j).getMovies().get(k.intValue()).getPoster_path();
+						System.out.println("i=" + i + " :: " + covers[i]);
+					}
+					
+					i++;
+					
+					if (i == 5)
+						break;
+				}
+			if (i == 5)
+				break;
+		}
+
 		return covers;
 	}
 

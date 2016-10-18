@@ -24,6 +24,7 @@ public class OverviewSearcher {
 		List<String> keywords_by_movie = new ArrayList<>();
 
 		/* find movie keywords */
+		if (movies != null)
 		for(int i=0; i < movies.size(); i++){
 
 			keyWordsList = keyWords.getKeyWordsList();
@@ -46,7 +47,7 @@ public class OverviewSearcher {
 
 					keywords_by_movie.add(key_word);
 
-					System.out.println("Movie "+movies.get(i).getTitle()+" has key-word "+key_word);
+					if (debug) System.out.println("Movie "+movies.get(i).getTitle()+" has key-word "+key_word);
 				}
 			}
 

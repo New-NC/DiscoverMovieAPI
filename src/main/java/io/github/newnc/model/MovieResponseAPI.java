@@ -76,8 +76,9 @@ public class MovieResponseAPI {
 		this.results = ovs.execute(results);
 		if(debug){
 			System.out.println("----- Teste(setMovies) -----");
-			for (MovieInfo mi : this.results)
-				System.out.println(mi.getTitle() + " | " + mi.getLabels());
+			if (this.results != null)
+				for (MovieInfo mi : this.results)
+					System.out.println(mi.getTitle() + " | " + mi.getLabels());
 		}
 	}
 
@@ -93,6 +94,6 @@ public class MovieResponseAPI {
 		this.total_pages = total_pages;
 	}
 	
-	private boolean debug = true;
+	private boolean debug = false;
 
 }
