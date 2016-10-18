@@ -13,13 +13,12 @@ public class TopRatedMovieRepository extends MovieRepository {
 
 	@Override
 	protected void update() throws Exception {
-		System.out.println("update " + System.currentTimeMillis());
 
 		int i = 1;
 		int j = 1;
 		while (this.listAdventure.isEmpty() || this.listAnimal.isEmpty() || this.listPrincess.isEmpty() || this.listTech.isEmpty()) {
 			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
-				String apiResponse = TMDBRequester.requestPageNewest(i);
+				String apiResponse = TMDBRequester.requestPageTopRated(i);
 	
 				JsonObject jsonObjectFactory = new JsonObject();
 				MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];

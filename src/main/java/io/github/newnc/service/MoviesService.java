@@ -50,12 +50,16 @@ public class MoviesService {
 		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
 		movieData[0] = repositories.get(i-1).getPage(1);
 		if(debug) System.out.println("AEHOOO!!");
+		
+		System.out.println(repositories.size());
 
 		return movieData;
 	}
 
 	@RequestMapping(value = "/movies/covers", method = RequestMethod.GET)
 	public String[] covers(HttpServletResponse response) {
+		System.out.println("/movies/covers");
+		
 		String[] covers;
 		int numRepos = repositories.size();
 
@@ -68,6 +72,8 @@ public class MoviesService {
 						.getMovies()
 						.get(0)
 						.getPoster_path();
+				System.out.println(repositories.get(i));
+				System.out.println(covers[i]);
 			}
 
 			for (int i = 0; i < numRepos; i++) {

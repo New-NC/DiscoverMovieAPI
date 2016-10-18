@@ -36,7 +36,8 @@ public class DataReloadTimer<T extends AbstractRepository> implements Observer, 
 					thread = new Thread(this);
 			}
 			
-			thread.start();
+			if (thread.isInterrupted())
+				thread.start();
 			System.out.println(thread.toString());
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -31,7 +31,7 @@ public class TMDBRequester {
 					Unirest.get("https://api.themoviedb.org/3/discover/movie"
 							+ "?api_key=" + APIKEY
 							+ "&certification_country=US&certification.lte=G"
-							+ "&sort_by=vote_average.desc&page=" + page).asJson();
+							+ "&sort_by=popularity.desc&page=" + page).asJson();
 			return response.getBody().toString();
 		} catch (UnirestException e) {
 			e.printStackTrace();
