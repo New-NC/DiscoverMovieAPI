@@ -1,8 +1,8 @@
 package io.github.newnc.model;
 
-import java.io.IOException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 
 /**
@@ -11,10 +11,10 @@ import java.util.Observable;
  *
  */
 public abstract class AbstractRepository extends Observable {
-	protected List<Integer> listAnimal    = new ArrayList<Integer>();
-	protected List<Integer> listTech	  = new ArrayList<Integer>();
-	protected List<Integer> listPrincess  = new ArrayList<Integer>();
-	protected List<Integer> listAdventure = new ArrayList<Integer>();
+	protected Map<Integer, List<Integer>> listAnimal    = new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listTech		= new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listPrincess  = new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listAdventure = new HashMap<Integer, List<Integer>>();
 	
 	
 	/**

@@ -88,51 +88,26 @@ public class MoviesService {
 	}
 
 	@RequestMapping(value = "/movies/categories/{id}", method = RequestMethod.GET)
-	public Map<String, String> coversCategories(HttpServletResponse response, @PathVariable("id") Integer repositoryId ) {
-		Map<String, String> categories = new HashMap<String, String>();
-
+	public String[] coversCategories(HttpServletResponse response, @PathVariable("id") Integer repositoryId ) {
 		System.out.println("/movies/categories/{id}="+repositoryId);
 
-		try {
-			//List<MovieInfo> movies = repositories.get(repositoryId).getPage(1).getMovies();
-
-			for (MovieResponseAPI page : repositories.get(repositoryId).getPages()) {
-				List<MovieInfo> movies = page.getMovies();
-				System.out.println("pegamos " + movies.size() + " filmes");
-
-				for (MovieInfo movie : movies) {
-					//System.out.println(movie.stringify());
-					System.out.println("--------------------");
-					System.out.println("Titulo: "+movie.getTitle());
-					List<String> genre = movie.getLabels();
-
-					System.out.println("Labels: " + genre);
-
-					if(genre != null){
-						System.out.println("qtde labels: " + genre.size());
-						if (genre.size() > 0) {
-							categories.put(genre.get(0), movie.getPoster_path());
-							System.out.println(genre.get(0) + " - " + movie.getPoster_path()+"\n");
-						}
-					}
-
-					if (categories.size() == 4)
-						break;
-					else
-						System.out.println("< 4");
-				}
-			}
-		} catch (IndexOutOfBoundsException ioobe) {
-			response.setStatus(HttpStatus.SC_NO_CONTENT);
+		MovieRepository repo = null;
+		if (repositoryId == 0)
+			repo = (NewestMovieRepository) repositories.get(repositoryId);
+		else if (repositoryId == 1)
+			repo = (TopRatedMovieRepository) repositories.get(repositoryId);
+		
+		if (repo != null) {
+			return repo.getOneCoverbyBucket();
 		}
-
-		return categories;
+		
+		return new String[4];
 	}
 
-	public MovieInfo[] getResults() {
-		MovieInfo[] movies = new MovieInfo[5];
+	public String[] getResults() {
+		String[] moviesCovers = new String[5];
 
-		return movies;
+		return moviesCovers;
 	}
 
 	@RequestMapping(value = "/movies/{page}", method = RequestMethod.GET)

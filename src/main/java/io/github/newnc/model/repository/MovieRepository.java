@@ -140,4 +140,58 @@ public class MovieRepository extends AbstractRepository {
 	
 	private boolean debug = true;
 
+	public String[] getOneCoverbyBucket() {
+		String[] covers = new String[4];
+
+		covers[0] = "";
+		for (int i = 0; i < listAdventure.size(); i++) {
+			List<Integer> list = listAdventure.get(i);
+			if (list != null)
+				for (Integer j : list) {
+					covers[0] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					break;
+				}
+			
+			if (!covers[0].isEmpty()) break;
+		}
+
+		covers[1] = "";
+		for (int i = 0; i < listAnimal.size(); i++) {
+			List<Integer> list = listAnimal.get(i);
+			if (list != null)
+				for (Integer j : list) {
+					covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					break;
+				}
+			
+			if (!covers[1].isEmpty()) break;
+		}
+
+		covers[2] = "";
+		for (int i = 0; i < listPrincess.size(); i++) {
+			List<Integer> list = listPrincess.get(i);
+			if (list != null)
+				for (Integer j : list) {
+					covers[2] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					break;
+				}
+			
+			if (!covers[2].isEmpty()) break;
+		}
+
+		covers[3] = "";
+		for (int i = 0; i < listTech.size(); i++) {
+			List<Integer> list = listTech.get(i);
+			if (list != null)
+				for (Integer j : list) {
+					covers[3] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					break;
+				}
+			
+			if (!covers[3].isEmpty()) break;
+		}
+		
+		return covers;
+	}
+
 }

@@ -27,6 +27,10 @@ public class NewestMovieRepository extends MovieRepository {
 			MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
 			List<MovieInfo> movies = movieData.getMovies();
 			movieData.setMovies(movies);
+			List<Integer> listAdventure = new ArrayList<Integer>();
+			List<Integer> listAnimal = new ArrayList<Integer>();
+			List<Integer> listPrincess = new ArrayList<Integer>();
+			List<Integer> listTech = new ArrayList<Integer>();
 			
 			for(MovieInfo movie : movies){
 				/*Foram adicionadas 4 listas no AbstractRepository
@@ -79,6 +83,11 @@ public class NewestMovieRepository extends MovieRepository {
 					}
 				}
 			}
+			
+			this.listAdventure.put(i, listAdventure);
+			this.listAnimal.put(i, listAnimal);
+			this.listPrincess.put(i, listPrincess);
+			this.listTech.put(i, listTech);
 
 			pages.add(movieData);
 			
@@ -118,25 +127,29 @@ public class NewestMovieRepository extends MovieRepository {
 	
 	public void printLists(List<MovieInfo> movies){
 		System.out.println("listAdventure");
-		if(listAdventure.size() > 0)
-			for(int i : listAdventure){
-				System.out.println(movies.get(i).getTitle());
-			}
+		for (int j = 0; j < listAdventure.size(); j++)
+			if(listAdventure.get(j) != null && listAdventure.get(j).size() > 0)
+				for(int i : listAdventure.get(j)){
+					System.out.println(movies.get(i).getTitle());
+				}
 		System.out.println("\nlistAnimal");
-		if(listAdventure.size() > 0)
-			for(int i : listAnimal){
-				System.out.println(movies.get(i).getTitle());
-			}
+		for (int j = 0; j < listAnimal.size(); j++)
+			if(listAnimal.get(j) != null && listAnimal.get(j).size() > 0)
+				for(int i : listAnimal.get(j)){
+					System.out.println(movies.get(i).getTitle());
+				}
 		System.out.println("\nlistPrincess");
-		if(listPrincess.size() > 0)
-			for(int i : listPrincess){
-				System.out.println(movies.get(i).getTitle());
-			}
+		for (int j = 0; j < listPrincess.size(); j++)
+			if(listPrincess.get(j) != null && listPrincess.get(j).size() > 0)
+				for(int i : listPrincess.get(j)){
+					System.out.println(movies.get(i).getTitle());
+				}
 		System.out.println("\nlistTech");
-		if(listTech.size() > 0)
-			for(int i : listTech){
-				System.out.println(movies.get(i).getTitle());
-			}
+		for (int j = 0; j < listTech.size(); j++)
+			if(listTech.get(j) != null && listTech.get(j).size() > 0)
+				for(int i : listTech.get(j)){
+					System.out.println(movies.get(i).getTitle());
+				}
 		System.out.println("");
 	}
 }
