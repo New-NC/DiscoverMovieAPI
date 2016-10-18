@@ -19,7 +19,7 @@ public class OverviewSearcher {
 		keyWords = new KeyWordsList();
 	}
 
-	public void execute(List<MovieInfo> movies){
+	public List<MovieInfo> execute(List<MovieInfo> movies){
 		List<String> keyWordsList;
 		List<String> keywords_by_movie = new ArrayList<>();
 
@@ -35,9 +35,9 @@ public class OverviewSearcher {
 					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+" ") ||
 					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+".") ||
 					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+",") ||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"S") ||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"ES") ||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"AGE") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"S ") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"ES ") ||
+					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"AGE ") ||
 					// Added title search, 'cause reasons.
 					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+" ") ||
 					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"S") ||
@@ -46,7 +46,7 @@ public class OverviewSearcher {
 
 					keywords_by_movie.add(key_word);
 
-					// System.out.println("Movie "+movie.getTitle()+" has key-word "+key_word);
+					System.out.println("Movie "+movies.get(i).getTitle()+" has key-word "+key_word);
 				}
 			}
 
@@ -56,6 +56,8 @@ public class OverviewSearcher {
 			if(debug) System.out.println("Movie: "+movies.get(i).getTitle()+
 							"\tGenres: "+movies.get(i).getLabels());
 		}
+		
+		return movies;
 
 	}
 }

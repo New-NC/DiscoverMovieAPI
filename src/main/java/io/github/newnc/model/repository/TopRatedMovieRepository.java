@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import ch.qos.logback.core.read.ListAppender;
 import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.util.DataReloadTimer;
@@ -11,7 +12,7 @@ import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.TMDBRequester;
 
 public class TopRatedMovieRepository extends MovieRepository {
-	
+
 	@Override
 	protected void update() throws Exception {
 		System.out.println("update " + System.currentTimeMillis());
@@ -23,71 +24,63 @@ public class TopRatedMovieRepository extends MovieRepository {
 			MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
 			List<MovieInfo> movies = movieData.getMovies();
 			movieData.setMovies(movies);
+			
 			List<Integer> listAdventure = new ArrayList<Integer>();
 			List<Integer> listAnimal = new ArrayList<Integer>();
 			List<Integer> listPrincess = new ArrayList<Integer>();
 			List<Integer> listTech = new ArrayList<Integer>();
-			
-			for(MovieInfo movie : movies){
-				/*Foram adicionadas 4 listas no AbstractRepository
-				 * Aqui, precisa iterar por todos os filmes e dependendo da label
-				 * colocar na lista adequada. Assim, teremos uma lista com filmes de aventura,
-				 * animal, tecnologia e princesa.
+
+			for (MovieInfo movie : movieData.getMovies()) {
+				/*
+				 * Foram adicionadas 4 listas no AbstractRepository Aqui,
+				 * precisa iterar por todos os filmes e dependendo da label
+				 * colocar na lista adequada. Assim, teremos uma lista com
+				 * filmes de aventura, animal, tecnologia e princesa.
 				 */
-				
+
 				List<String> labels = movie.getLabels();
-				if(debug)
-					System.out.println("Movie "+movie.getTitle()+" has "+labels.size()+" labels");
-				
-				for(String label: labels){
-					if( label.equals("DOG") ||
-						label.equals("PONY") ||
-						labels.equals("FISH") ||
-						labels.equals("LION") ||
-						labels.equals("CAT")
-							){
+
+				if (debug)
+					System.out.println("Movie " + movie.getTitle() + " has " + labels.size() + " labels");
+
+				for (String label : labels) {
+					System.out.println(">>>>>>>> " + label);
+					if (label.equals("DOG") || label.equals("PONY") || label.equals("FISH") || label.equals("LION")
+							|| label.equals("CAT")) {
 						/* Animal */
-						listAnimal.add(movie.getId());
-						
-					}
-					else if( labels.equals("ROBOT") ||
-							 labels.equals("RACE CAR") ||
-							 labels.equals("MONSTER")
-							){
-						
+						System.out.println("<<<<<<< Animal");
+						listAnimal.add(movieData.getMovies().indexOf(movie));
+
+					} else if (label.equals("ROBOT") || label.equals("RACE CAR") || label.equals("MONSTER")) {
+
 						/* Tech */
-						listTech.add(movie.getId());
-					}
-					else if( labels.equals("PRINCESS") ||
-							 labels.equals("PRINCE") ||
-							 labels.equals("UNICORN") ||
-							 labels.equals("FAIRY") ||
-							 labels.equals("DWARF")
-							){
-						
+						System.out.println("<<<<<<< Tech");
+						listTech.add(movieData.getMovies().indexOf(movie));
+					} else if (label.equals("PRINCESS") || label.equals("PRINCE") || label.equals("UNICORN")
+							|| label.equals("FAIRY") || label.equals("DWARF")) {
+
 						/* Princess */
-						listPrincess.add(movie.getId());
-					}
-					else if( labels.equals("FRIENDSHIP") ||
-							 labels.equals("DRAGON") ||
-							 labels.equals("TOY")
-							){
-						
+						System.out.println("<<<<<<< Princess");
+						listPrincess.add(movieData.getMovies().indexOf(movie));
+					} else if (label.equals("FRIENDSHIP") || label.equals("DRAGON") || label.equals("TOY")) {
+
 						/* Adventure */
-						listAdventure.add(movie.getId());
+						System.out.println("<<<<<<< Adventure");
+						listAdventure.add(movieData.getMovies().indexOf(movie));
 					}
 				}
 			}
-			
+
 			this.listAdventure.put(i, listAdventure);
 			this.listAnimal.put(i, listAnimal);
 			this.listPrincess.put(i, listPrincess);
 			this.listTech.put(i, listTech);
 
 			pages.add(movieData);
-			
-			if(debug) printLists(movies);
+
 		}
+		if (debug)
+			printLists();
 
 		setChanged();
 		notifyObservers();
@@ -120,34 +113,38 @@ public class TopRatedMovieRepository extends MovieRepository {
 		addObserver(DataReloadTimer.getTimer());
 	}
 
-	public void printLists(List<MovieInfo> movies){
+	public void printLists() {
 		System.out.println("listAdventure");
 		for (int j = 0; j < listAdventure.size(); j++)
-			if(listAdventure.get(j) != null && listAdventure.get(j).size() > 0)
-				for(int i : listAdventure.get(j)){
-					System.out.println(movies.get(i).getTitle());
+			if (listAdventure.get(j) != null && listAdventure.get(j).size() > 0)
+				for (Integer i : listAdventure.get(j)) {
+					if (pages.get(j).getMovies().size() > i.intValue())
+						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 				}
 		System.out.println("\nlistAnimal");
 		for (int j = 0; j < listAnimal.size(); j++)
-			if(listAnimal.get(j) != null && listAnimal.get(j).size() > 0)
-				for(int i : listAnimal.get(j)){
-					System.out.println(movies.get(i).getTitle());
+			if (listAnimal.get(j) != null && listAnimal.get(j).size() > 0)
+				for (Integer i : listAnimal.get(j)) {
+					if (pages.get(j).getMovies().size() > i.intValue())
+						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 				}
 		System.out.println("\nlistPrincess");
 		for (int j = 0; j < listPrincess.size(); j++)
-			if(listPrincess.get(j) != null && listPrincess.get(j).size() > 0)
-				for(int i : listPrincess.get(j)){
-					System.out.println(movies.get(i).getTitle());
+			if (listPrincess.get(j) != null && listPrincess.get(j).size() > 0)
+				for (Integer i : listPrincess.get(j)) {
+					if (pages.get(j).getMovies().size() > i.intValue())
+						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 				}
 		System.out.println("\nlistTech");
 		for (int j = 0; j < listTech.size(); j++)
-			if(listTech.get(j) != null && listTech.get(j).size() > 0)
-				for(int i : listTech.get(j)){
-					System.out.println(movies.get(i).getTitle());
+			if (listTech.get(j) != null && listTech.get(j).size() > 0)
+				for (Integer i : listTech.get(j)) {
+					if (pages.get(j).getMovies().size() > i.intValue())
+						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 				}
 		System.out.println("");
 	}
-	
+
 	private boolean debug = true;
-	
+
 }

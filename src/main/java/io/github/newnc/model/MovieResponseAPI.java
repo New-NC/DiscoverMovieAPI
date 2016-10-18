@@ -70,8 +70,10 @@ public class MovieResponseAPI {
 	 */
 	public void setMovies(List<MovieInfo> results) throws Exception {
 		/* busca nas resenhas e classificacao das labels */
-		ovs.execute(results);
+		
 
+		
+		this.results = ovs.execute(results);
 		if(debug){
 			System.out.println("----- Teste(setMovies) -----");
 			for (MovieInfo mi : this.results)

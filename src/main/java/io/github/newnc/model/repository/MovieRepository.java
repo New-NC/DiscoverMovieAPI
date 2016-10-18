@@ -152,7 +152,7 @@ public class MovieRepository extends AbstractRepository {
 					break;
 				}
 			
-			if (!covers[0].isEmpty()) break;
+			if (covers[0] != null && !covers[0].isEmpty()) break;
 		}
 
 		covers[1] = "";
@@ -164,7 +164,7 @@ public class MovieRepository extends AbstractRepository {
 					break;
 				}
 			
-			if (!covers[1].isEmpty()) break;
+			if (covers[1] != null && !covers[1].isEmpty()) break;
 		}
 
 		covers[2] = "";
@@ -176,7 +176,7 @@ public class MovieRepository extends AbstractRepository {
 					break;
 				}
 			
-			if (!covers[2].isEmpty()) break;
+			if (covers[2] != null && !covers[2].isEmpty()) break;
 		}
 
 		covers[3] = "";
@@ -188,7 +188,7 @@ public class MovieRepository extends AbstractRepository {
 					break;
 				}
 			
-			if (!covers[3].isEmpty()) break;
+			if (covers[3] != null && !covers[3].isEmpty()) break;
 		}
 		
 		return covers;
