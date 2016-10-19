@@ -73,7 +73,8 @@ public class MovieResponseAPI {
 		
 
 		
-		this.results = ovs.execute(results);
+		//this.results = ovs.execute(results);
+		results = ovs.execute(results);
 		if(debug){
 			System.out.println("----- Teste(setMovies) -----");
 			if (this.results != null)

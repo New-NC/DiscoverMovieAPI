@@ -43,7 +43,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 						List<String> labels = movie.getLabels();
 
 						if (debug)
-							System.out.println("Movie " + movie.getTitle() + " has " + labels.size() + " labels");
+							System.out.println("Movie " + movie.getTitle() + " has " + labels.size() + " labels: " + movie.getLabels());
 
 						for (String label : labels) {
 							if (debug)
@@ -175,6 +175,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 				}
 
 				pages.add(movieData);
+				//System.out.println("MOVIE DATA: " + movieData);
 				//if (debug)
 					//printLists();
 
@@ -218,7 +219,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 	}
 
 	public void printLists() {
-		System.out.println("listAdventure");
+		System.out.println("listAdventure Last Call TOPRATED");
 		for (int j = 0; j < listAdventure.size(); j++)
 			if (listAdventure.get(j) != null && listAdventure.get(j).size() > 0)
 				for (Integer i : listAdventure.get(j)) {
@@ -249,6 +250,6 @@ public class TopRatedMovieRepository extends MovieRepository {
 		System.out.println("");
 	}
 
-	private boolean debug = false;
+	private boolean debug = true;
 
 }

@@ -34,8 +34,8 @@ public class KeyWordsList {
 		key_words.add("RACE CAR");
 		key_words.add("LION");
 		key_words.add("FRIENDSHIP");
-		key_words.add("TOY");
 		key_words.add("SNOOPY");
+		key_words.add("TOY");
 
 		// key_words.add("MOTHA_FUCKIN_DRAGONS");
 
