@@ -3,7 +3,9 @@ package io.github.newnc.model.repository;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.newnc.debug.Print;
 import io.github.newnc.model.MovieInfo;
+import io.github.newnc.model.MovieResponse;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.JsonObject;
@@ -16,19 +18,19 @@ public class TopRatedMovieRepository extends MovieRepository {
 
 		int i = 1;
 		int j = 1;
-		while (this.listAdventure.isEmpty() || this.listAnimal.isEmpty() || this.listPrincess.isEmpty() || this.listTech.isEmpty()) {
+		while (this.listAdventure.isEmpty() || this.listAnimal.isEmpty() || this.listPrincess.isEmpty()
+				|| this.listTech.isEmpty()) {
 			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
 				String apiResponse = TMDBRequester.requestPageTopRated(i);
 
 				JsonObject jsonObjectFactory = new JsonObject();
-				MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
-				List<MovieInfo> movies = movieData.getMovies();
-				movieData.setMovies(movies);
+				MovieResponseAPI movieDataAPI = jsonObjectFactory.createObject(apiResponse);
+				MovieResponse movieData = MovieResponse.createMovieResponse(movieDataAPI);
 
-				List<Integer> listAdventure = null;//new ArrayList<Integer>();
-				List<Integer> listAnimal = null;//new ArrayList<Integer>();
-				List<Integer> listPrincess = null;//new ArrayList<Integer>();
-				List<Integer> listTech = null;//new ArrayList<Integer>();
+				List<Integer> listAdventure = null;// new ArrayList<Integer>();
+				List<Integer> listAnimal = null;// new ArrayList<Integer>();
+				List<Integer> listPrincess = null;// new ArrayList<Integer>();
+				List<Integer> listTech = null;// new ArrayList<Integer>();
 
 				if (movieData != null && movieData.getMovies() != null)
 					for (MovieInfo movie : movieData.getMovies()) {
@@ -42,45 +44,33 @@ public class TopRatedMovieRepository extends MovieRepository {
 
 						List<String> labels = movie.getLabels();
 
-						if (debug)
-							System.out.println("Movie " + movie.getTitle() + " has " + labels.size() + " labels: " + movie.getLabels());
+						Print.howManyLabels(movie);
 
 						for (String label : labels) {
-							if (debug)
-								System.out.println(">>>>>>>> " + label);
 							if (label.equals("DOG") || label.equals("PONY") || label.equals("FISH")
 									|| label.equals("LION") || label.equals("CAT") || label.equals("SNOOPY")) {
-								/* Animal */
-								if (debug)
-									System.out.println("<<<<<<< Animal :: " + movieData.getMovies().indexOf(movie));
+								Print.categorizeMovie(movie, label, "Animal");
 								if (listAnimal == null)
 									listAnimal = new ArrayList<>();
 								listAnimal.add(movieData.getMovies().indexOf(movie));
 								this.listAnimal.put(i, listAnimal);
 							} else if (label.equals("ROBOT") || label.equals("RACE CAR") || label.equals("MONSTER")) {
-
-								/* Tech */
-								if (debug)
-									System.out.println("<<<<<<< Tech :: " + movieData.getMovies().indexOf(movie));
+								Print.categorizeMovie(movie, label, "Tech");
 								if (listTech == null)
 									listTech = new ArrayList<>();
 								listTech.add(movieData.getMovies().indexOf(movie));
 								this.listTech.put(i, listTech);
 							} else if (label.equals("PRINCESS") || label.equals("PRINCE") || label.equals("UNICORN")
 									|| label.equals("FAIRY") || label.equals("DWARF")) {
+								Print.categorizeMovie(movie, label, "Princess");
 
-								/* Princess */
-								if (debug)
-									System.out.println("<<<<<<< Princess :: " + movieData.getMovies().indexOf(movie));
 								if (listPrincess == null)
 									listPrincess = new ArrayList<>();
 								listPrincess.add(movieData.getMovies().indexOf(movie));
 								this.listPrincess.put(i, listPrincess);
 							} else if (label.equals("FRIENDSHIP") || label.equals("DRAGON") || label.equals("TOY")) {
+								Print.categorizeMovie(movie, label, "Adventure");
 
-								/* Adventure */
-								if (debug)
-									System.out.println("<<<<<<< Adventure :: " + movieData.getMovies().indexOf(movie));
 								if (listAdventure == null)
 									listAdventure = new ArrayList<>();
 								listAdventure.add(movieData.getMovies().indexOf(movie));
@@ -89,103 +79,14 @@ public class TopRatedMovieRepository extends MovieRepository {
 						}
 					}
 
-				if (listAdventure != null) {
-					if (debug) {
-						System.out.println("=======================");
-						System.out.println("=======================");
-						System.out.println("listAdventure :: " + i);
-						System.out.println("=======================");
-						System.out.println(this.listAdventure.get(i));
-						System.out.println(listAdventure);
-					}
-					/*
-					 * List<Integer> previous = this.listAdventure.put(i,
-					 * listAdventure); if (previous != null)
-					 * this.listAdventure.put(i, previous);
-					 */
-					this.listAdventure.putIfAbsent(i, listAdventure);
-					if (debug) {
-						System.out.println(this.listAdventure.get(i));
-						System.out.println("=======================");
-						System.out.println("=======================");
-					}
-				}
-				if (listAnimal != null) {
-					if (debug) {
-						System.out.println("=======================");
-						System.out.println("=======================");
-						System.out.println("listAnimal :: " + i);
-						System.out.println("=======================");
-						System.out.println(this.listAnimal.get(i));
-						System.out.println(listAnimal);
-					}
-					/*
-					 * List<Integer> previous = this.listAnimal.put(i,
-					 * listAnimal); if (previous != null)
-					 * this.listAdventure.put(i, previous);
-					 */
-					this.listAnimal.putIfAbsent(i, listAnimal);
-					if (debug) {
-						System.out.println(this.listAnimal.get(i));
-						System.out.println("=======================");
-						System.out.println("=======================");
-					}
-				}
-				if (listPrincess != null) {
-					if (debug) {
-						System.out.println("=======================");
-						System.out.println("=======================");
-						System.out.println("listPrincess :: " + i);
-						System.out.println("=======================");
-						System.out.println(this.listPrincess.get(i));
-						System.out.println(listPrincess);
-					}
-					/*
-					 * List<Integer> previous = this.listPrincess.put(i,
-					 * listPrincess); if (previous != null)
-					 * this.listAdventure.put(i, previous);
-					 */
-					this.listPrincess.putIfAbsent(i, listPrincess);
-					if (debug) {
-						System.out.println(this.listPrincess.get(i));
-						System.out.println("=======================");
-						System.out.println("=======================");
-					}
-				}
-				if (listTech != null) {
-					if (debug) {
-						System.out.println("=======================");
-						System.out.println("=======================");
-						System.out.println("listTech :: " + i);
-						System.out.println("=======================");
-						System.out.println(this.listTech.get(i));
-						System.out.println(listTech);
-					}
-					/*
-					 * List<Integer> previous = this.listTech.put(i, listTech);
-					 * if (previous != null) this.listAdventure.put(i,
-					 * previous);
-					 */
-					this.listTech.putIfAbsent(i, listTech);
-					if (debug) {
-						System.out.println(this.listTech.get(i));
-						System.out.println("=======================");
-						System.out.println("=======================");
-					}
-				}
-
 				pages.add(movieData);
-				//System.out.println("MOVIE DATA: " + movieData);
-				//if (debug)
-					//printLists();
 
 				i++;
 			}
 			j++;
 		}
 
-		if (debug)
-			printLists();
+		Print.allCategoriesList(pages, this.listAdventure, this.listAnimal, this.listPrincess, this.listTech);
 
 		setChanged();
 		notifyObservers();
@@ -217,39 +118,5 @@ public class TopRatedMovieRepository extends MovieRepository {
 
 		addObserver(DataReloadTimer.getTimer());
 	}
-
-	public void printLists() {
-		System.out.println("listAdventure Last Call TOPRATED");
-		for (int j = 0; j < listAdventure.size(); j++)
-			if (listAdventure.get(j) != null && listAdventure.get(j).size() > 0)
-				for (Integer i : listAdventure.get(j)) {
-					if (pages.get(j).getMovies().size() > i.intValue())
-						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
-				}
-		System.out.println("\nlistAnimal");
-		for (int j = 0; j < listAnimal.size(); j++)
-			if (listAnimal.get(j) != null && listAnimal.get(j).size() > 0)
-				for (Integer i : listAnimal.get(j)) {
-					if (pages.get(j).getMovies().size() > i.intValue())
-						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
-				}
-		System.out.println("\nlistPrincess");
-		for (int j = 0; j < listPrincess.size(); j++)
-			if (listPrincess.get(j) != null && listPrincess.get(j).size() > 0)
-				for (Integer i : listPrincess.get(j)) {
-					if (pages.get(j).getMovies().size() > i.intValue())
-						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
-				}
-		System.out.println("\nlistTech");
-		for (int j = 0; j < listTech.size(); j++)
-			if (listTech.get(j) != null && listTech.get(j).size() > 0)
-				for (Integer i : listTech.get(j)) {
-					if (pages.get(j).getMovies().size() > i.intValue())
-						System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
-				}
-		System.out.println("");
-	}
-
-	private boolean debug = true;
 
 }

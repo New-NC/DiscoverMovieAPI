@@ -1,0 +1,12 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v1.4.0.RELEASE)
+
+2016-10-19 22:20:16.876  INFO 14514 --- [           main] io.github.newnc.ServerApplication        : Starting ServerApplication on idea.gois with PID 14514 (/home/guilhermejcgois/Projects/new-nc/mewDisk/target/classes started by guilhermejcgois in /home/guilhermejcgois/Projects/new-nc/mewDisk)
+2016-10-19 22:20:16.895  INFO 14514 --- [           main] io.github.newnc.ServerApplication        : No active profile set, falling back to default profiles: default
+2016-10-19 22:20:17.046  INFO 14514 --- [           main] ationConfigEmbeddedWebApplicationContext : Refreshing org.springframework.boot.context.embedded.AnnotationConfigEmbeddedWebApplicationContext@1afd44cb: startup date [Wed Oct 19 22:20:17 BRST 2016]; root of context hierarchy

@@ -12,12 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.github.newnc.model.MovieResponseAPI;
+import io.github.newnc.model.MovieResponse;
 import io.github.newnc.model.repository.MovieRepository;
 import io.github.newnc.model.repository.NewestMovieRepository;
 import io.github.newnc.model.repository.TopRatedMovieRepository;
-import io.github.newnc.util.JsonObject;
-import io.github.newnc.util.TMDBRequester;
 
 @RestController
 public class MoviesService {
@@ -34,7 +32,7 @@ public class MoviesService {
 	}
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)
-	public MovieResponseAPI[] movies() {
+	public MovieResponse movies() {
 		if(debug) System.out.println("movies()");
 		
 		int i;
@@ -47,8 +45,7 @@ public class MoviesService {
 			}
 		}
 
-		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
-		movieData[0] = repositories.get(i-1).getPage(1);
+		MovieResponse movieData = repositories.get(i-1).getPage(1);
 		if(debug) System.out.println("AEHOOO!!");
 		
 		System.out.println(repositories.size());
@@ -124,16 +121,6 @@ public class MoviesService {
 		}
 
 		return moviesCovers;
-	}
-
-	@RequestMapping(value = "/movies/{page}", method = RequestMethod.GET)
-	public MovieResponseAPI[] moviesAtPage(@PathVariable Integer page) {
-		String apiRequest = TMDBRequester.requestPage(page);
-
-		JsonObject jsonObjectFactory = new JsonObject();
-		MovieResponseAPI[] movieData = jsonObjectFactory.createObject(apiRequest);
-
-		return movieData;
 	}
 
 	@RequestMapping(value = "/reload", method = RequestMethod.GET)
