@@ -58,40 +58,40 @@ public class Print {
 				if (listAdventure.get(j) != null && listAdventure.get(j).size() > 0)
 					for (Integer i : listAdventure.get(j)) {
 						System.out.println("listAdventure :: i=" + i);
-						if (pages.get(j) != null && pages.get(j).getMovies() != null
+						if (j < pages.size() && pages.get(j) != null && pages.get(j).getMovies() != null
 								&& pages.get(j).getMovies().size() > i.intValue())
 							System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 					}
 			}
 			System.out.println("\nlistAnimal");
 			for (int j : listAnimal.keySet()) {
-				System.out.println("listAdventure :: j=" + j);
+				System.out.println("nlistAnimal :: j=" + j);
 				if (listAnimal.get(j) != null && listAnimal.get(j).size() > 0)
 					for (Integer i : listAnimal.get(j)) {
-						System.out.println("listAdventure :: i=" + i);
-						if (pages.get(j) != null && pages.get(j).getMovies() != null
+						System.out.println("nlistAnimal :: i=" + i);
+						if (j < pages.size() && pages.get(j) != null && pages.get(j).getMovies() != null
 								&& pages.get(j).getMovies().size() > i.intValue())
 							System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 					}
 			}
 			System.out.println("\nlistPrincess");
 			for (int j : listPrincess.keySet()) {
-				System.out.println("listAdventure :: j=" + j);
+				System.out.println("nlistPrincess :: j=" + j);
 				if (listPrincess.get(j) != null && listPrincess.get(j).size() > 0)
 					for (Integer i : listPrincess.get(j)) {
-						System.out.println("listAdventure :: i=" + i);
-						if (pages.get(j) != null && pages.get(j).getMovies() != null
+						System.out.println("nlistPrincess :: i=" + i);
+						if (j < pages.size() && pages.get(j) != null && pages.get(j).getMovies() != null
 								&& pages.get(j).getMovies().size() > i.intValue())
 							System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 					}
 			}
 			System.out.println("\nlistTech");
 			for (int j : listTech.keySet()) {
-				System.out.println("listAdventure :: j=" + j);
+				System.out.println("nlistTech :: j=" + j);
 				if (listTech.get(j) != null && listTech.get(j).size() > 0)
 					for (Integer i : listTech.get(j)) {
-						System.out.println("listAdventure :: i=" + i);
-						if (pages.get(j) != null && pages.get(j).getMovies() != null
+						System.out.println("nlistTech :: i=" + i);
+						if (j < pages.size() && pages.get(j) != null && pages.get(j).getMovies() != null
 								&& pages.get(j).getMovies().size() > i.intValue())
 							System.out.println(pages.get(j).getMovies().get(i.intValue()).getTitle());
 					}

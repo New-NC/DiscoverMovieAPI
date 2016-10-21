@@ -142,7 +142,7 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listAdventure.get(i);
 			if (list != null)
 				covers[0] = pages
-				.get(listAdventure.get(i).get(0))
+				.get(listAdventure.get(i).get(listAdventure.get(i).size() - 1))
 				.getMovies()
 				.get(list.get(0))
 				.getPoster_path();
@@ -155,7 +155,7 @@ public class MovieRepository extends AbstractRepository {
 			 * pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase
 			 * ().contains("MICKEY")) { covers[0] =
 			 * pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-			 * 
+			 *
 			 * break; } }
 			 */
 
@@ -168,7 +168,7 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listAnimal.get(i);
 			if (list != null)
 				covers[1] = pages
-						.get(listAnimal.get(i).get(0))
+						.get(listAnimal.get(i).get(listAnimal.get(i).size() - 1))
 						.getMovies()
 						.get(list.get(0))
 						.getPoster_path();
@@ -181,7 +181,7 @@ public class MovieRepository extends AbstractRepository {
 			 * pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase
 			 * ().contains("GARFIELD")) { covers[1] =
 			 * pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-			 * 
+			 *
 			 * break; } }
 			 */
 
@@ -194,7 +194,7 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listPrincess.get(i);
 			if (list != null)
 				covers[2] = pages
-						.get(listPrincess.get(i).get(0))
+						.get(listPrincess.get(i).get(listPrincess.get(i).size() - 1))
 						.getMovies()
 						.get(list.get(0))
 						.getPoster_path();
@@ -207,7 +207,7 @@ public class MovieRepository extends AbstractRepository {
 			 * pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase
 			 * ().contains("LITTLE")) { covers[2] =
 			 * pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-			 * 
+			 *
 			 * break; } }
 			 */
 
@@ -220,7 +220,7 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listTech.get(i);
 			if (list != null)
 				covers[3] = pages
-						.get(listTech.get(i).get(0))
+						.get(listTech.get(i).get(listTech.get(i).size() - 1))
 						.getMovies()
 						.get(list.get(0))
 						.getPoster_path();
@@ -233,7 +233,7 @@ public class MovieRepository extends AbstractRepository {
 			 * pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase
 			 * ().contains("APES")) { covers[3] =
 			 * pages.get(i).getMovies().get(j.intValue()).getPoster_path();
-			 * 
+			 *
 			 * break; } }
 			 */
 
