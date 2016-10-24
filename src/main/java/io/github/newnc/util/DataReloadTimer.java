@@ -1,10 +1,9 @@
 package io.github.newnc.util;
 
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 
-import io.github.newnc.model.AbstractRepository;
+import io.github.newnc.model.repository.AbstractRepository;
 
 public class DataReloadTimer<T extends AbstractRepository> implements Observer, Runnable {
 	

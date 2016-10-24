@@ -10,51 +10,144 @@ import java.util.ArrayList;
 */
 
 public class KeyWordsList {
-	public List<String> key_words;
+	private List<String> good, bad, animal, tech, princess, adventure;
 
 	public KeyWordsList(){
-		key_words = new ArrayList<String>();
-
-		// key_words.add("");
+		good = new ArrayList<String>();
+		bad = new ArrayList<String>();
+		
+		animal = new ArrayList<String>();
+		tech = new ArrayList<String>();
+		princess = new ArrayList<String>();
+		adventure = new ArrayList<String>();
+		
 
 		// The good ones
+		
+		String s;
+		s = "ROBOT";
+		good.add(s);
+		tech.add(s);
+		
+		s = "PRINCESS";
+		good.add(s);
+		princess.add(s);
+		
+		s = "PRINCE";
+		good.add(s);
+		princess.add(s);
+		
+		s = "UNICORN";
+		good.add(s);
+		animal.add(s);
 
-		key_words.add("ROBOT");
-		key_words.add("PRINCESS");
-		key_words.add("PRINCE");
-		key_words.add("UNICORN");
-		key_words.add("PONY");
-		key_words.add("CAT");
-		key_words.add("DOG");
-		key_words.add("DRAGON");
-		key_words.add("MONSTER");
-		key_words.add("FISH");
-		key_words.add("FAIRY");
-		key_words.add("DWARF");
-		key_words.add("RACE CAR");
-		key_words.add("LION");
-		key_words.add("FRIENDSHIP");
-		key_words.add("SNOOPY");
-		key_words.add("TOY");
+		s = "PONY";
+		good.add(s);
+		animal.add(s);
 
-		// key_words.add("MOTHA_FUCKIN_DRAGONS");
+		s = "PONIES";
+		good.add(s);
+		animal.add(s);
+
+		s = "CAT";
+		good.add(s);
+		animal.add(s);
+
+		s = "DOG";
+		good.add(s);
+		animal.add(s);
+
+		s = "DRAGON";
+		good.add(s);
+		animal.add(s);
+
+		s = "MONSTER";
+		good.add(s);
+		adventure.add(s);
+
+		s = "FISH";
+		good.add(s);
+		animal.add(s);
+
+		s = "FAIRY";
+		good.add(s);
+		princess.add(s);
+
+		s = "FAIRIES";
+		good.add(s);
+		princess.add(s);
+
+		s = "DWARF";
+		good.add(s);
+		princess.add(s);
+
+		s = "DWARVES";
+		good.add(s);
+		princess.add(s);
+
+		s = "RACE CAR";
+		good.add(s);
+		adventure.add(s);
+
+		s = "LION";
+		good.add(s);
+		animal.add(s);
+
+		s = "FRIENDSHIP";
+		good.add(s);
+		adventure.add(s);
+
+		s = "SNOOPY";
+		good.add(s);
+		animal.add(s);
+
+		s = "TOY";
+		good.add(s);
+		adventure.add(s);
+
+
+		// key_words_good.add("MOTHA_FUCKIN_DRAGONS");
 
 
 		// The bad ones
-		/*
-		key_words.add("HORRIFIC");
-		key_words.add("MURDER");
-		key_words.add("VICTIM");
-		key_words.add("HOMICIDE");
-		key_words.add("GAY");
-		key_words.add("MARRI");
-		key_words.add("PROSTITUTE");
-		key_words.add("");
-		//*/
+		bad.add("HORRIFIC");
+		bad.add("MURDER");
+		bad.add("VICTIM");
+		bad.add("HOMICIDE");
+		bad.add("GAY");
+		bad.add("MARRI");
+		bad.add("PROSTITUTE");
+		bad.add("SATAN");
+		bad.add("SEX");
+		bad.add("DRUGS");
+		bad.add("BITCH");
+		bad.add("PREY");
+		
 	}
 
-	public List<String> getKeyWordsList(){
-		return key_words;
+	public List<String> getKeyWordsGoodList(){
+		return good;
+	}
+	
+	public List<String> getKeyWordsBadList(){
+		return bad;
+	}
+	
+	public List<String> getAnimalList(){
+		return animal;
+	}
+	
+	public List<String> getAdventureList(){
+		return adventure;
+	}
+	
+	public List<String> getPrincessList(){
+		return princess;
+	}
+	
+	public List<String> getTechList(){
+		return tech;
 	}
 
 }
+

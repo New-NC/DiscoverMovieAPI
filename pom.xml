@@ -8,7 +8,7 @@
 	<packaging>war</packaging>
 
 	<name>DiscoverMovieAPI</name>
-	<description>M�dulo back end de nosso aplicativo de filmes infantis.</description>
+	<description>Módulo back-end do nosso aplicativo de filmes.</description>
 
 	<parent>
 		<groupId>org.springframework.boot</groupId>

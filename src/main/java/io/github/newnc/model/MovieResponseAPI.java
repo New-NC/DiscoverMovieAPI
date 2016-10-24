@@ -8,6 +8,8 @@ import java.util.List;
  *
  */
 public class MovieResponseAPI {
+	
+	private boolean debug = false;
 
 	/**
 	 * This field represents the page of the response.
@@ -68,15 +70,16 @@ public class MovieResponseAPI {
 	 * <code>MovieResponseAPI</code> instance.
 	 * @throws IOException
 	 */
-	public void setMovies(List<MovieInfo> results) throws Exception {
+	public void setMovies(List<MovieInfo> r){
 		/* busca nas resenhas e classificacao das labels */
 		
+		ovs.execute(r);
 
+		this.results = r;
 		
-		//this.results = ovs.execute(results);
-		results = ovs.execute(results);
 		if(debug){
 			System.out.println("----- Teste(setMovies) -----");
+			
 			if (this.results != null)
 				for (MovieInfo mi : this.results)
 					System.out.println(mi.getTitle() + " | " + mi.getLabels());
@@ -94,7 +97,6 @@ public class MovieResponseAPI {
 	public void setTotal_pages(int total_pages) {
 		this.total_pages = total_pages;
 	}
-	
-	private boolean debug = false;
+
 
 }

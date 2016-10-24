@@ -128,7 +128,7 @@ public class MovieInfo {
 		return this.labels.get(this.labels.indexOf(find));
 	}
 
-	public void setLabel(List<String> labels){
+	public void setLabels(List<String> labels){
 		this.labels = labels;
 	}
 

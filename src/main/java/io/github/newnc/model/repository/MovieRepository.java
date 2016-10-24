@@ -1,14 +1,18 @@
 package io.github.newnc.model.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import io.github.newnc.model.AbstractRepository;
+import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.JsonObject;
+import io.github.newnc.util.KeyWordsList;
 import io.github.newnc.util.TMDBRequester;
 
 /**
@@ -20,11 +24,18 @@ import io.github.newnc.util.TMDBRequester;
  *      Pattern</a>
  */
 public class MovieRepository extends AbstractRepository {
-
+	
+	protected Map<Integer, List<Integer>> listAnimal    = new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listTech		= new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listPrincess  = new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listAdventure = new HashMap<Integer, List<Integer>>();
+	
+	protected KeyWordsList keyWordsList = new KeyWordsList();
+	
 	/**
 	 * This fields represents a list of pages of the response from TMDB API.
 	 */
-	protected List<MovieResponseAPI> pages;
+	protected List<MovieResponseAPI> movieResponsePages;
 
 	/**
 	 * Returns a list of pages of this <code>MovieRepository</code> instance.
@@ -32,7 +43,7 @@ public class MovieRepository extends AbstractRepository {
 	 * @return a list of pages of this <code>MovieRepository</code> instance.
 	 */
 	public List<MovieResponseAPI> getPages() {
-		return pages;
+		return movieResponsePages;
 	}
 
 	/**
@@ -43,7 +54,7 @@ public class MovieRepository extends AbstractRepository {
 	 * MovieRepository</code> instance.
 	 */
 	public Iterator<MovieResponseAPI> getIterator() {
-		return pages.iterator();
+		return movieResponsePages.iterator();
 	}
 
 	/**
@@ -57,36 +68,138 @@ public class MovieRepository extends AbstractRepository {
 	 */
 	public MovieResponseAPI getPage(int numPage) {
 		int i;
-		for (i = 0; i < pages.size(); i++)
-			if (pages.get(i).getPage() == numPage)
-				return pages.get(i);
+		for (i = 0; i < movieResponsePages.size(); i++)
+			if (movieResponsePages.get(i).getPage() == numPage)
+				return movieResponsePages.get(i);
 
 		return null;
 	}
 
 	@Override
 	protected void update() throws Exception {
-		System.out.println("CALLED: update() " + System.currentTimeMillis());
+		if(debug) System.out.println("update() " + System.currentTimeMillis());
 
-		for (int i = 1; i <= TMDBRequester.MAXREQUEST; i++) {
-			System.out.println("Get page: " + i);
-
-			String apiResponse = TMDBRequester.requestPage(i);
-
-			JsonObject jsonObjectFactory = new JsonObject();
-			MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
-			movieData.setMovies(movieData.getMovies());
-
-			pages.add(movieData);
-
-			System.out.println("---- Teste -----");
-			System.out.println(pages.get(pages.size() - 1).getMovies().get(0).getLabels());
-		}
+		movieResponsePages = requestMovies();
 
 		setChanged();
 		notifyObservers();
 
 		System.out.println("---- MovieRepository -----");
+	}
+	
+	protected List<MovieResponseAPI> requestMovies(){
+		List<MovieResponseAPI> list_movies = new ArrayList<>();
+		
+		for (int i = 1; i <= TMDBRequester.MAXREQUEST; i++) {
+			System.out.println("Get page: " + i);
+			
+			String apiResponse = TMDBRequester.requestPage(i);
+			list_movies.add(getMovieResponse(apiResponse));
+
+			System.out.println("---- Teste -----");
+			System.out.println(movieResponsePages.get(movieResponsePages.size() - 1).getMovies().get(0).getLabels());
+		}
+		
+		return list_movies;
+	}
+	
+	protected MovieResponseAPI getMovieResponse(String apiResponse){
+
+		JsonObject jsonObjectFactory = new JsonObject();
+		MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse)[0];
+		movieData.setMovies(movieData.getMovies());
+		
+		return movieData;
+	}
+	
+	protected MovieResponseAPI categorySetter(int i, String apiResponse){
+		
+		MovieResponseAPI movieData = getMovieResponse(apiResponse);
+
+		Set<Integer> adventureMovieIds = new HashSet<Integer>();
+		Set<Integer> animalMovieIds = new HashSet<Integer>();
+		Set<Integer> princessMovieIds = new HashSet<Integer>();
+		Set<Integer> techMovieIds = new HashSet<Integer>();
+		
+		List<MovieInfo> tempMI = movieData.getMovies();
+		List<String> tempMovieLabels, tempCatLabels;
+		
+		for(MovieInfo m : tempMI){
+			
+			tempMovieLabels = m.getLabels();
+			for(String label : tempMovieLabels){
+				
+				tempCatLabels = keyWordsList.getAdventureList();
+				for(String advLabel : tempCatLabels){
+					
+					if(label.equals(advLabel)){
+						adventureMovieIds.add(m.getId());
+					}
+				}
+				
+				tempCatLabels = keyWordsList.getAnimalList();
+				for(String animalLabel : tempCatLabels){
+					
+					if(label.equals(animalLabel)){
+						animalMovieIds.add(m.getId());
+					}
+				}
+				
+				tempCatLabels = keyWordsList.getPrincessList();
+				for(String prinLabel : tempCatLabels){
+					
+					if(label.equals(prinLabel)){
+						princessMovieIds.add(m.getId());
+					}
+				}
+				
+				tempCatLabels = keyWordsList.getTechList();
+				for(String techLabel : tempCatLabels){
+					
+					if(label.equals(techLabel)){
+						techMovieIds.add(m.getId());
+					}
+				}
+			}
+		}
+		
+		List<Integer> adventureIntList = new ArrayList<Integer>();
+		for(Integer id : adventureMovieIds){
+			adventureIntList.add(id);
+		}
+		this.listAdventure.put(i, adventureIntList);
+		
+		List<Integer> animalIntList = new ArrayList<Integer>();
+		for(Integer id : animalMovieIds){
+			animalIntList.add(id);
+		}
+		this.listAnimal.put(i, animalIntList);
+		
+		List<Integer> princessIntList = new ArrayList<Integer>();
+		for(Integer id : princessMovieIds){
+			princessIntList.add(id);
+		}
+		this.listPrincess.put(i, princessIntList);
+		
+		List<Integer> techIntList = new ArrayList<Integer>();
+		for(Integer id : techMovieIds){
+			techIntList.add(id);
+		}
+		this.listTech.put(i, techIntList);
+		
+		if(debug){
+			sopln("===== TEST =====");
+			sopln("listAdventure["+i+"] size: "+this.listAdventure.get(i).size());
+			sopln("listAnimal["+i+"] size: "+this.listAnimal.get(i).size());
+			sopln("listPrincess["+i+"] size: "+this.listPrincess.get(i).size());
+			sopln("listTech["+i+"] size: "+this.listTech.get(i).size());
+		}
+		
+		return movieData;
+	}
+	
+	private void sopln(String s){
+		System.out.println(s);
 	}
 
 	@Override
@@ -106,7 +219,7 @@ public class MovieRepository extends AbstractRepository {
 
 	@Override
 	public void clear() {
-		pages.clear();
+		movieResponsePages.clear();
 
 		setChanged();
 		notifyObservers();
@@ -114,7 +227,7 @@ public class MovieRepository extends AbstractRepository {
 
 	@Override
 	public boolean isEmpty() {
-		return pages.isEmpty();
+		return movieResponsePages.isEmpty();
 	}
 
 	/**
@@ -137,7 +250,7 @@ public class MovieRepository extends AbstractRepository {
 	 * Default constructor.
 	 */
 	protected MovieRepository() {
-		pages = new ArrayList<>();
+		movieResponsePages = new ArrayList<>();
 
 		addObserver(DataReloadTimer.getTimer());
 	}
@@ -152,8 +265,8 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listAdventure.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("JUNGLE") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("ADVENTURE") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("MICKEY")) {
-						covers[0] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					if (movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("JUNGLE") || movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("ADVENTURE") || movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("MICKEY")) {
+						covers[0] = movieResponsePages.get(i).getMovies().get(j.intValue()).getPoster_path();
 						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
 						break;
 					}
@@ -169,8 +282,8 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listAnimal.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SCOOBY")){ //|| pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SNOOPY") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("GARFIELD")) {
-						covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					if (movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SCOOBY")){ //|| pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SNOOPY") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("GARFIELD")) {
+						covers[1] = movieResponsePages.get(i).getMovies().get(j.intValue()).getPoster_path();
 						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
 						break;
 					}
@@ -186,8 +299,8 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listPrincess.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("BEAUTY") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("MERMAID") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("LITTLE")) {
-						covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					if (movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("BEAUTY") || movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("MERMAID") || movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("LITTLE")) {
+						covers[2] = movieResponsePages.get(i).getMovies().get(j.intValue()).getPoster_path();
 						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
 						break;
 					}
@@ -202,8 +315,8 @@ public class MovieRepository extends AbstractRepository {
 			List<Integer> list = listTech.get(i);
 			if (list != null)
 				for (Integer j : list) {
-					if (pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("WALL") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SPACE") || pages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("APES")) {
-						covers[1] = pages.get(i).getMovies().get(j.intValue()).getPoster_path();
+					if (movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("WALL") || movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("SPACE") || movieResponsePages.get(i).getMovies().get(j.intValue()).getTitle().toUpperCase().contains("APES")) {
+						covers[3] = movieResponsePages.get(i).getMovies().get(j.intValue()).getPoster_path();
 						//System.out.println("Animal: " + pages.get(i).getMovies().get(j.intValue()).getTitle());
 						break;
 					}
@@ -248,7 +361,7 @@ public class MovieRepository extends AbstractRepository {
 					System.out.println("k="+k);
 					System.out.println("i="+i);
 					if (i >= 0) {
-						covers[i] = pages.get(j).getMovies().get(k.intValue()).getPoster_path();
+						covers[i] = movieResponsePages.get(j).getMovies().get(k.intValue()).getPoster_path();
 						System.out.println("i=" + i + " :: " + covers[i]);
 					}
 

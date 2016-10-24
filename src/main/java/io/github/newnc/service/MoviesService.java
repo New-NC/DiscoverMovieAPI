@@ -27,28 +27,36 @@ public class MoviesService {
 	private boolean debug = true;
 
 	public MoviesService() {
+		if(debug) System.out.println("MoviesService");
+		
 		repositories = new ArrayList<>();
 
 		repositories.add(NewestMovieRepository.getInstance());
 		repositories.add(TopRatedMovieRepository.getInstance());
+		
+		for(MovieRepository r : repositories){
+			try {
+				r.updateIfNeeded();;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)
 	public MovieResponseAPI[] movies() {
 		if(debug) System.out.println("movies()");
 		
-		int i;
-		
-		for(i = 0; i < repositories.size(); i++){
+		for(MovieRepository r : repositories){
 			try {
-				repositories.get(i).updateIfNeeded();;
+				r.updateIfNeeded();;
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
 
 		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
-		movieData[0] = repositories.get(i-1).getPage(1);
+		movieData[0] = repositories.get(0).getPage(1);
 		if(debug) System.out.println("AEHOOO!!");
 		
 		System.out.println(repositories.size());
@@ -58,7 +66,7 @@ public class MoviesService {
 
 	@RequestMapping(value = "/movies/covers", method = RequestMethod.GET)
 	public String[] covers(HttpServletResponse response) {
-		System.out.println("/movies/covers");
+		if(debug) System.out.println("/movies/covers");
 		
 		String[] covers;
 		int numRepos = repositories.size();
@@ -67,11 +75,9 @@ public class MoviesService {
 
 		try {
 			for (int i = 0; i < numRepos; i++) {
-				covers[i] = repositories.get(i)
-						.getPage(1)
-						.getMovies()
-						.get(0)
-						.getPoster_path();
+				covers[i] = repositories.get(i).getPage(1).getMovies()
+								.get(0)
+								.getPoster_path();
 				System.out.println(repositories.get(i));
 				System.out.println(covers[i]);
 			}

@@ -19,54 +19,50 @@ public class OverviewSearcher {
 		keyWords = new KeyWordsList();
 	}
 
-	public List<MovieInfo> execute(List<MovieInfo> movies){
-		List<String> keyWordsList;
-		List<String> keywords_by_movie = new ArrayList<>();
+	public void execute(List<MovieInfo> movies){
+		List<String> keyWordsGoodList, keyWordsBadList;
+		List<String> keywords_by_movie = null;
 
 		/* find movie keywords */
 		if (movies != null)
-		for(int i=0; i < movies.size(); i++){
+		for(MovieInfo m : movies){
 
-			keyWordsList = keyWords.getKeyWordsList();
-			keywords_by_movie.clear();
+			keyWordsGoodList = keyWords.getKeyWordsGoodList();
+			keyWordsBadList = keyWords.getKeyWordsBadList();
+			
+			keywords_by_movie = new ArrayList<>();
+			
+			String ov = m.getOverview().toUpperCase();
 
-			// This doesn't cover everything (fairies or ponies, for example), but it's good
-			for(String key_word: keyWordsList){
-				if(
-					(movies.get(i).getOverview().toUpperCase().contains(" "+key_word+" ") /*||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+".") ||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+",") ||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"S ") ||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"ES ") ||
-					movies.get(i).getOverview().toUpperCase().contains(" "+key_word+"AGE ") ||
-					// Added title search, 'cause reasons.
-					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+" ") ||
-					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"S") ||
-					movies.get(i).getTitle().toUpperCase().contains(" "+key_word+"ES")*/)
-					// Black list
-					/*&& !movies.get(i).getTitle().toUpperCase().contains(" SATAN ")
-					&& !movies.get(i).getTitle().toUpperCase().contains(" SEX ")
-					&& !movies.get(i).getTitle().toUpperCase().contains(" DRUGS ")
-					&& !movies.get(i).getTitle().toUpperCase().contains(" SEXIEST ")
-					&& !movies.get(i).getTitle().toUpperCase().contains(" BITCH ")
-					&& !movies.get(i).getTitle().toUpperCase().contains(" JEWISH ")
-					&& !movies.get(i).getTitle().toUpperCase().contains(" PREY ")*/
-				  ){
-
+			/* Stores the good keywords */
+			for(String key_word : keyWordsGoodList){
+				if( ov.contains(" "+key_word+" ") ||
+					ov.contains(" "+key_word+",") ||
+					ov.contains(" "+key_word+".") ||
+					ov.contains(" "+key_word+"S") ){
+					
 					keywords_by_movie.add(key_word);
-
-					if (debug) System.out.println("Movie "+movies.get(i).getTitle()+" has key-word "+key_word);
+				}
+			}
+			
+			/* If there's any of the bad ones, clear and break */
+			for(String key_word : keyWordsBadList){
+				if( ov.contains(" "+key_word+" ") ||
+					ov.contains(" "+key_word+",") ||
+					ov.contains(" "+key_word+".") ||
+					ov.contains(" "+key_word+"S") ){
+					
+					keywords_by_movie.clear();
+					break;
 				}
 			}
 
 			/* classify movie genre */
-			movies.get(i).setLabel(keywords_by_movie);
+			m.setLabels(keywords_by_movie);
 
-			if(debug) System.out.println("Movie: "+movies.get(i).getTitle()+
-							"\tGenres: "+movies.get(i).getLabels());
+			if(debug) System.out.println("Movie: "+m.getTitle()+" --- Genres: "+m.getLabels());
 		}
 
-		return movies;
-
 	}
+	
 }
