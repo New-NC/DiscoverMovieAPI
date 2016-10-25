@@ -12,28 +12,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.github.newnc.model.MovieResponse;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.model.repository.MovieRepository;
 import io.github.newnc.model.repository.NewestMovieRepository;
 import io.github.newnc.model.repository.TopRatedMovieRepository;
-import io.github.newnc.util.JsonObject;
-import io.github.newnc.util.TMDBRequester;
 
 @RestController
 public class MoviesService {
 
 	private List<MovieRepository> repositories;
-	
+
 	private boolean debug = true;
 
 	public MoviesService() {
 		if(debug) System.out.println("MoviesService");
-		
+
 		repositories = new ArrayList<>();
 
 		repositories.add(NewestMovieRepository.getInstance());
 		repositories.add(TopRatedMovieRepository.getInstance());
-		
+
 		for(MovieRepository r : repositories){
 			try {
 				r.updateIfNeeded();;
@@ -44,9 +43,9 @@ public class MoviesService {
 	}
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)
-	public MovieResponseAPI[] movies() {
+	public MovieResponseAPI movies() {
 		if(debug) System.out.println("movies()");
-		
+
 		for(MovieRepository r : repositories){
 			try {
 				r.updateIfNeeded();;
@@ -55,10 +54,10 @@ public class MoviesService {
 			}
 		}
 
-		MovieResponseAPI[] movieData = new MovieResponseAPI[1];
-		movieData[0] = repositories.get(0).getPage(1);
+		MovieResponseAPI movieData = repositories.get(0).getPage(1);
+
 		if(debug) System.out.println("AEHOOO!!");
-		
+
 		System.out.println(repositories.size());
 
 		return movieData;
@@ -67,7 +66,7 @@ public class MoviesService {
 	@RequestMapping(value = "/movies/covers", method = RequestMethod.GET)
 	public String[] covers(HttpServletResponse response) {
 		if(debug) System.out.println("/movies/covers");
-		
+
 		String[] covers;
 		int numRepos = repositories.size();
 
@@ -99,47 +98,42 @@ public class MoviesService {
 	@RequestMapping(value = "/movies/categories/{id}", method = RequestMethod.GET)
 	public String[] coversCategories(HttpServletResponse response, @PathVariable("id") Integer repositoryId ) {
 		System.out.println("/movies/categories/{id}="+repositoryId);
+		
+		String[] covers = new String[4];
 
 		MovieRepository repo = null;
 		if (repositoryId == 0)
 			repo = (NewestMovieRepository) repositories.get(repositoryId);
 		else if (repositoryId == 1)
 			repo = (TopRatedMovieRepository) repositories.get(repositoryId);
-		
+
 		if (repo != null) {
-			return repo.getOneCoverbyBucket();
+			covers[0] = repo.getCoverFromBucket(0);
+			covers[1] = repo.getCoverFromBucket(1);
+			covers[2] = repo.getCoverFromBucket(2);
+			covers[3] = repo.getCoverFromBucket(3);
 		}
-		
-		return new String[4];
+
+		return covers;
 	}
 
 	@RequestMapping(value = "/movies/results/{repo}/{genre}", method = RequestMethod.GET)
 	public String[] getResults(@PathVariable("repo") Integer repositoryId, @PathVariable("genre") Integer genreId) {
 		System.out.println("/movies/results/{repo}="+repositoryId+"/{genre}="+genreId);
-		
+
 		String[] moviesCovers = new String[5];
-		
+
 		MovieRepository repo = null;
 		if (repositoryId == 0)
 			repo = (NewestMovieRepository) repositories.get(repositoryId);
 		else if (repositoryId == 1)
 			repo = (TopRatedMovieRepository) repositories.get(repositoryId);
-		
+
 		if (repo != null) {
 			return repo.getCoversFromBucket(genreId);
 		}
 
 		return moviesCovers;
-	}
-
-	@RequestMapping(value = "/movies/{page}", method = RequestMethod.GET)
-	public MovieResponseAPI[] moviesAtPage(@PathVariable Integer page) {
-		String apiRequest = TMDBRequester.requestPage(page);
-
-		JsonObject jsonObjectFactory = new JsonObject();
-		MovieResponseAPI[] movieData = jsonObjectFactory.createObject(apiRequest);
-
-		return movieData;
 	}
 
 	@RequestMapping(value = "/reload", method = RequestMethod.GET)

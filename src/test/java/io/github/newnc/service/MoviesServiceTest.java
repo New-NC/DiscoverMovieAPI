@@ -14,7 +14,7 @@ import org.springframework.web.util.NestedServletException;
 
 import ch.qos.logback.core.status.Status;
 import io.github.newnc.ServerApplication;
-import io.github.newnc.model.repository.AbstractRepository;
+//import io.github.newnc.model.repository.AbstractRepository;
 import io.github.newnc.model.repository.MovieRepository;
 
 import static org.hamcrest.Matchers.is;

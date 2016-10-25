@@ -10,11 +10,14 @@ import io.github.newnc.util.MovieInitEvent;
 public class ServerApplication {
 
 	public static void main(String[] args) {
-		ConfigurableApplicationContext ctx = 
+		// If you don't want to see log messages, comment the line above.
+		//io.github.newnc.debug.Print.activate();
+
+		ConfigurableApplicationContext ctx =
 				SpringApplication.run(ServerApplication.class, args);
-		
+
 		MovieInitEvent bean = ctx.getBean(MovieInitEvent.class);
-		
+
 		System.out.println("MovieInitEvent fired? " + bean.getEventFired());
 	}
 }

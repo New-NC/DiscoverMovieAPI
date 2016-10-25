@@ -2,24 +2,21 @@ package io.github.newnc.model.repository;
 
 import java.util.ArrayList;
 
+import io.github.newnc.debug.Print;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.TMDBRequester;
 
 public class NewestMovieRepository extends MovieRepository {
 
-	/* Attributes */
-	
-	private boolean debug = false;
-
 	/**
 	 * This fields represents a instance of this class.
 	 */
 	private static NewestMovieRepository instance;
 
-	
+
 	/* Methods */
-	
+
 	@Override
 	protected void update() throws Exception {
 		System.out.println("update " + System.currentTimeMillis()+" at "+this.getClass());
@@ -27,7 +24,7 @@ public class NewestMovieRepository extends MovieRepository {
 		int i = 1;
 		int j = 1;
 		while (	this.listAdventure.isEmpty() ||
-				this.listAnimal.isEmpty() || 
+				this.listAnimal.isEmpty() ||
 				this.listPrincess.isEmpty() ||
 				this.listTech.isEmpty()) {
 			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
@@ -41,6 +38,8 @@ public class NewestMovieRepository extends MovieRepository {
 			}
 			j++;
 		}
+
+		Print.allCategoriesList(movieResponsePages, this.listAdventure, this.listAnimal, this.listPrincess, this.listTech);
 
 		setChanged();
 		notifyObservers();
@@ -68,6 +67,4 @@ public class NewestMovieRepository extends MovieRepository {
 
 		addObserver(DataReloadTimer.getTimer());
 	}
-	
-	
 }

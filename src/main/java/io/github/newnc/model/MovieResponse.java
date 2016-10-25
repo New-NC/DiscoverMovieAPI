@@ -3,13 +3,11 @@ package io.github.newnc.model;
 import java.io.IOException;
 import java.util.List;
 
-import io.github.newnc.debug.Print;
-
 /**
  * This class represents a response given by the TMDB API.
  *
  */
-public class MovieResponseAPI {
+public class MovieResponse {
 
 	/**
 	 * This field represents the page of the response.
@@ -25,7 +23,7 @@ public class MovieResponseAPI {
 	/**
 	 * This field represents the list of movies in the response.
 	 */
-	private List<MovieInfo> results;
+	private List<MovieInfo> movies;
 
 	/**
 	 * Returns the number of the page of response from TMDB API of this <code>
@@ -57,7 +55,7 @@ public class MovieResponseAPI {
 	 * <code>MovieResponseAPI</code> instance.
 	 */
 	public List<MovieInfo> getMovies() {
-		return results;
+		return movies;
 	}
 
 	/**
@@ -68,18 +66,12 @@ public class MovieResponseAPI {
 	 * <code>MovieResponseAPI</code> instance.
 	 * @throws IOException
 	 */
-	public void setMovies(List<MovieInfo> r){
-		/* busca nas resenhas e classificacao das labels */
-
-		new OverviewSearcher().execute(r);
-
-		this.results = r;
-
-		Print.moviesTitleAndLabels(this.results);
+	public void setMovies(List<MovieInfo> movies) throws Exception {
+		this.movies = movies;
 	}
 
 	public String stringify() {
-		return page + " - " + "(" + results + ")";
+		return page + " - " + "(" + movies + ")";
 	}
 
 	public int getTotal_pages() {
@@ -89,5 +81,17 @@ public class MovieResponseAPI {
 	public void setTotal_pages(int total_pages) {
 		this.total_pages = total_pages;
 	}
+	
+	/*public static MovieResponse createMovieResponse(MovieResponseAPI responseAPI) throws Exception {
+		MovieResponse response = new MovieResponse();
+		
+		MovieInfo[] tempInfoArrays = responseAPI.getMovies();
+		if (tempInfoArrays != null)
+			response.setMovies(new OverviewSearcher().execute(tempInfoArrays));
+		response.setPage(responseAPI.getPage());
+		response.setTotal_pages(responseAPI.getTotal_pages());
+		
+		return response;
+	}*/
 
 }
