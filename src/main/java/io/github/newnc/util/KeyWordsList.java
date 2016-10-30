@@ -87,7 +87,7 @@ public class KeyWordsList {
 
 		s = "RACE CAR";
 		good.add(s);
-		adventure.add(s);
+		tech.add(s);
 
 		s = "LION";
 		good.add(s);
@@ -104,12 +104,86 @@ public class KeyWordsList {
 		s = "TOY";
 		good.add(s);
 		adventure.add(s);
-
+		
+		s = "BEST OF FRIEND";
+		good.add(s);
+		adventure.add(s);
+		
+		s = "WHEELS";
+		good.add(s);
+		tech.add(s);
+		
+		s = "LEGO";
+		good.add(s);
+		tech.add(s);
+		
+		s = "DRAGON BALL";
+		good.add(s);
+		adventure.add(s);
+		
+		s = "PUPPIES";
+		good.add(s);
+		animal.add(s);
+		
+		s = "PUP";
+		good.add(s);
+		animal.add(s);
+		
+		s = "PIPER";
+		good.add(s);
+		adventure.add(s);
+		
+		s = "ZEBRA";
+		good.add(s);
+		animal.add(s);
+		
+		s = "LEOPARD";
+		good.add(s);
+		animal.add(s);
+		
+		s = "OSTRICH";
+		good.add(s);
+		animal.add(s);
+		
+		s = "ELF";
+		good.add(s);
+		adventure.add(s);
+		
+		s = "LOVE STORY";
+		good.add(s);
+		adventure.add(s);
+		
+		s = "IRON MAN";
+		good.add(s);
+		tech.add(s);
+		
+		s = "WRECK-IT-RALPH";
+		good.add(s);
+		adventure.add(s);
+		
+		s = "MACHINE";
+		good.add(s);
+		tech.add(s);
+		
+		s = "SHIP";
+		good.add(s);
+		tech.add(s);
 
 		// key_words_good.add("MOTHA_FUCKIN_DRAGONS");
 
 
 		// The bad ones
+		bad.add("BEE MOVIE");
+		
+		bad.add("THRILLER");
+		bad.add("KILL");
+		bad.add("KILLING");
+		bad.add("WIDOW");
+		bad.add("DEADLY");
+		bad.add("TOMB");
+		bad.add("ZOMBIE");
+		bad.add("HALLICINOGEN");
+		bad.add("DEATH");
 		bad.add("HORRIFIC");
 		bad.add("MURDER");
 		bad.add("VICTIM");
@@ -122,6 +196,8 @@ public class KeyWordsList {
 		bad.add("DRUGS");
 		bad.add("BITCH");
 		bad.add("PREY");
+		bad.add("PSYCHO");
+		bad.add("CANNABIS");
 		
 	}
 

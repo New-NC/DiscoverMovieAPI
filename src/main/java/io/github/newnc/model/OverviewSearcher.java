@@ -33,24 +33,36 @@ public class OverviewSearcher {
 			keywords_by_movie = new ArrayList<>();
 
 			String ov = m.getOverview().toUpperCase();
+			String title = m.getTitle().toUpperCase();
 
 			/* Stores the good keywords */
 			for(String key_word : keyWordsGoodList){
 				if( ov.contains(" "+key_word+" ") ||
 					ov.contains(" "+key_word+",") ||
 					ov.contains(" "+key_word+".") ||
-					ov.contains(" "+key_word+"S") ){
+					ov.contains(" "+key_word+"S") ||
+					
+					title.contains(key_word+" ")){ // change to space at begin too if problems occur
 
 					keywords_by_movie.add(key_word);
 				}
 			}
+			
+			/* Special case 'cause it never appears with an space before //*/
+			/*
+			if(title.contains("LEGO ")){
+				keywords_by_movie.add("LEGO");
+			}
+			*/
 
 			/* If there's any of the bad ones, clear and break */
 			for(String key_word : keyWordsBadList){
 				if( ov.contains(" "+key_word+" ") ||
 					ov.contains(" "+key_word+",") ||
 					ov.contains(" "+key_word+".") ||
-					ov.contains(" "+key_word+"S") ){
+					ov.contains(" "+key_word+"S") ||
+					
+					title.contains(" "+key_word+" ")){
 
 					keywords_by_movie.clear();
 					break;

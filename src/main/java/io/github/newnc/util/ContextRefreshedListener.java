@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import io.github.newnc.service.MoviesService;
 
+
 @Component
 public class ContextRefreshedListener implements ApplicationListener<ContextRefreshedEvent> {
 	private MovieInitEvent movieInitEvent;

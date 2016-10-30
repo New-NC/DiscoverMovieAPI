@@ -27,6 +27,9 @@ public class MoviesService {
 
 	public MoviesService() {
 		if(debug) System.out.println("MoviesService");
+		
+		// If you don't want to see log messages, comment the line below.
+		//io.github.newnc.debug.Print.activate();
 
 		repositories = new ArrayList<>();
 
@@ -48,7 +51,7 @@ public class MoviesService {
 
 		for(MovieRepository r : repositories){
 			try {
-				r.updateIfNeeded();;
+				r.updateIfNeeded();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -138,13 +141,13 @@ public class MoviesService {
 
 	@RequestMapping(value = "/reload", method = RequestMethod.GET)
 	public void reload() {
-		Iterator<MovieRepository> repository = repositories.iterator();
-		while (repository.hasNext())
+		for(MovieRepository mR : repositories){
 			try {
-				((MovieRepository) repository.next()).forceUpdate();
+				mR.forceUpdate();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		}
 	}
 
 	@RequestMapping(value = "/clear", method = RequestMethod.GET)

@@ -14,12 +14,19 @@ public class TopRatedMovieRepository extends MovieRepository {
 
 		int i = 1;
 		int j = 1;
-		while (this.listAdventure.isEmpty() || this.listAnimal.isEmpty() || this.listPrincess.isEmpty()
-				|| this.listTech.isEmpty()) {
+		
+		int qtyCat[] = new int[qtyCategories];
+		
+		qtyCat[0] = 0;
+		qtyCat[1] = 0;
+		qtyCat[2] = 0;
+		qtyCat[3] = 0;
+		
+		while (	notFilledAllCategories(qtyCat) ) {
 			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
 				String apiResponse = TMDBRequester.requestPageTopRated(i);
 
-        MovieResponseAPI movieData = categorySetter(i, apiResponse);
+        MovieResponseAPI movieData = categorySetter(i, apiResponse, qtyCat);
 
 				movieResponsePages.add(movieData);
 

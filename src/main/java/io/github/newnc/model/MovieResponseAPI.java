@@ -63,17 +63,15 @@ public class MovieResponseAPI {
 	/**
 	 * Sets the list of movies given by the request to TMDB API of this
 	 * <code>MovieResponseAPI</code> instance.
-	 *
 	 * @param movies the list of movies given by the request to TMDB API of this
 	 * <code>MovieResponseAPI</code> instance.
+	 *
 	 * @throws IOException
 	 */
-	public void setMovies(List<MovieInfo> r){
+	public void labelMovies(){
 		/* busca nas resenhas e classificacao das labels */
 
-		new OverviewSearcher().execute(r);
-
-		this.results = r;
+		new OverviewSearcher().execute(this.results);
 
 		Print.moviesTitleAndLabels(this.results);
 	}

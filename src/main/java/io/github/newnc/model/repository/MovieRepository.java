@@ -25,12 +25,14 @@ import io.github.newnc.util.TMDBRequester;
  * @see <a href="http://www.oodesign.com/singleton-pattern.html">Singleton
  *      Pattern</a>
  */
-public class MovieRepository extends AbstractRepository {
+public class MovieRepository extends AbstractRepository{
 
-	protected Map<Integer, List<Integer>> listAnimal = new HashMap<Integer, List<Integer>>();
-	protected Map<Integer, List<Integer>> listTech = new HashMap<Integer, List<Integer>>();
-	protected Map<Integer, List<Integer>> listPrincess = new HashMap<Integer, List<Integer>>();
 	protected Map<Integer, List<Integer>> listAdventure = new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listAnimal = new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listPrincess = new HashMap<Integer, List<Integer>>();
+	protected Map<Integer, List<Integer>> listTech = new HashMap<Integer, List<Integer>>();
+
+	protected int qtyCategories = 4;
 
 	protected KeyWordsList keyWordsList = new KeyWordsList();
 
@@ -44,7 +46,7 @@ public class MovieRepository extends AbstractRepository {
 	 *
 	 * @return a list of pages of this <code>MovieRepository</code> instance.
 	 */
-	public List<MovieResponseAPI> getPages() {
+	public List<MovieResponseAPI> getPages(){
 		return movieResponsePages;
 	}
 
@@ -55,7 +57,7 @@ public class MovieRepository extends AbstractRepository {
 	 * @return an iterator for the list of <code>pages</code> of this <code>
 	 * MovieRepository</code> instance.
 	 */
-	public Iterator<MovieResponseAPI> getIterator() {
+	public Iterator<MovieResponseAPI> getIterator(){
 		return movieResponsePages.iterator();
 	}
 
@@ -68,18 +70,18 @@ public class MovieRepository extends AbstractRepository {
 	 * @return a specific <code>page</code> of this <code>MovieRepository
 	 * </code> instance.
 	 */
-	public MovieResponseAPI getPage(int numPage) {
+	public MovieResponseAPI getPage(int numPage){
 		int i;
-		for (i = 0; i < movieResponsePages.size(); i++)
-			if (movieResponsePages.get(i).getPage() == numPage)
+		for(i = 0; i < movieResponsePages.size(); i++)
+			if(movieResponsePages.get(i).getPage() == numPage)
 				return movieResponsePages.get(i);
 
 		return null;
 	}
 
 	@Override
-	protected void update() throws Exception {
-		Print.updateTime();
+	protected void update() throws Exception{
+		Print.updateTime(this.getClass().getName());
 
 		movieResponsePages = requestMovies();
 
@@ -89,10 +91,10 @@ public class MovieRepository extends AbstractRepository {
 		System.out.println("---- MovieRepository -----");
 	}
 
-	protected List<MovieResponseAPI> requestMovies() {
+	protected List<MovieResponseAPI> requestMovies(){
 		List<MovieResponseAPI> list_movies = new ArrayList<>();
 
-		for (int i = 1; i <= TMDBRequester.MAXREQUEST; i++) {
+		for(int i = 1; i <= TMDBRequester.MAXREQUEST; i++){
 			System.out.println("Get page: " + i);
 
 			String apiResponse = TMDBRequester.requestPage(i);
@@ -105,16 +107,28 @@ public class MovieRepository extends AbstractRepository {
 		return list_movies;
 	}
 
-	protected MovieResponseAPI getMovieResponse(String apiResponse) {
+	protected MovieResponseAPI getMovieResponse(String apiResponse){
 
 		JsonObject jsonObjectFactory = new JsonObject();
 		MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse);
-		movieData.setMovies(movieData.getMovies());
+		movieData.labelMovies();
 
 		return movieData;
 	}
 
-	protected MovieResponseAPI categorySetter(int i, String apiResponse) {
+	protected boolean notFilledAllCategories(int[] qtyCat){
+		System.out.println("notFilledAllCategories(): qtyCat { " + 
+				qtyCat[0] + " " + qtyCat[1] + " " + qtyCat[2] + " " + qtyCat[3] + " }");
+		
+		int min = 1;
+		
+		if(qtyCat[0] < min || qtyCat[1] < min || qtyCat[2] < min || qtyCat[3] < min){
+			return true;
+		}
+		return false;
+	}
+
+	protected MovieResponseAPI categorySetter(int i, String apiResponse, int[] qty){
 
 		MovieResponseAPI movieData = getMovieResponse(apiResponse);
 
@@ -126,65 +140,69 @@ public class MovieRepository extends AbstractRepository {
 		List<MovieInfo> tempMI = movieData.getMovies();
 		List<String> tempMovieLabels, tempCatLabels;
 
-		for (MovieInfo m : tempMI) {
+		for(MovieInfo m : tempMI){
 
 			tempMovieLabels = m.getLabels();
-			for (String label : tempMovieLabels) {
+			for(String label : tempMovieLabels){
 
 				tempCatLabels = keyWordsList.getAdventureList();
-				for (String advLabel : tempCatLabels) {
+				for(String advLabel : tempCatLabels){
 
-					if (label.equals(advLabel)) {
+					if(label.equals(advLabel)){
 						adventureMovieIds.add(m.getId());
+						qty[0]++;
 					}
 				}
 
 				tempCatLabels = keyWordsList.getAnimalList();
-				for (String animalLabel : tempCatLabels) {
+				for(String animalLabel : tempCatLabels){
 
-					if (label.equals(animalLabel)) {
+					if(label.equals(animalLabel)){
 						animalMovieIds.add(m.getId());
+						qty[1]++;
 					}
 				}
 
 				tempCatLabels = keyWordsList.getPrincessList();
-				for (String prinLabel : tempCatLabels) {
+				for(String prinLabel : tempCatLabels){
 
-					if (label.equals(prinLabel)) {
+					if(label.equals(prinLabel)){
 						princessMovieIds.add(m.getId());
+						qty[2]++;
 					}
 				}
 
 				tempCatLabels = keyWordsList.getTechList();
-				for (String techLabel : tempCatLabels) {
+				for(String techLabel : tempCatLabels){
 
-					if (label.equals(techLabel)) {
+					if(label.equals(techLabel)){
 						techMovieIds.add(m.getId());
+						qty[3]++;
 					}
 				}
 			}
 		}
 
 		List<Integer> adventureIntList = new ArrayList<Integer>();
-		for (Integer id : adventureMovieIds) {
+		for(Integer id : adventureMovieIds){
 			adventureIntList.add(id);
 		}
 		this.listAdventure.put(i, adventureIntList);
 
 		List<Integer> animalIntList = new ArrayList<Integer>();
-		for (Integer id : animalMovieIds) {
+		for(Integer id : animalMovieIds){
 			animalIntList.add(id);
 		}
 		this.listAnimal.put(i, animalIntList);
 
 		List<Integer> princessIntList = new ArrayList<Integer>();
-		for (Integer id : princessMovieIds) {
+		for(Integer id : princessMovieIds){
 			princessIntList.add(id);
 		}
 		this.listPrincess.put(i, princessIntList);
 
 		List<Integer> techIntList = new ArrayList<Integer>();
-		for (Integer id : techMovieIds) {
+		for(Integer id : techMovieIds){
 			techIntList.add(id);
 		}
 		this.listTech.put(i, techIntList);
@@ -195,20 +213,20 @@ public class MovieRepository extends AbstractRepository {
 	}
 
 	@Override
-	public void updateIfNeeded() throws Exception {
-		if (isEmpty())
+	public void updateIfNeeded() throws Exception{
+		if(isEmpty())
 			update();
 	}
 
 	@Override
-	public void forceUpdate() throws Exception {
+	public void forceUpdate() throws Exception{
 		clear();
 
 		update();
 	}
 
 	@Override
-	public void clear() {
+	public void clear(){
 		movieResponsePages.clear();
 
 		setChanged();
@@ -216,7 +234,7 @@ public class MovieRepository extends AbstractRepository {
 	}
 
 	@Override
-	public boolean isEmpty() {
+	public boolean isEmpty(){
 		return movieResponsePages.isEmpty();
 	}
 
@@ -230,8 +248,8 @@ public class MovieRepository extends AbstractRepository {
 	 *
 	 * @return an instance of this class.
 	 */
-	public static synchronized MovieRepository getInstance() {
-		if (instance == null)
+	public static synchronized MovieRepository getInstance(){
+		if(instance == null)
 			instance = new MovieRepository();
 		return instance;
 	}
@@ -239,22 +257,22 @@ public class MovieRepository extends AbstractRepository {
 	/**
 	 * Default constructor.
 	 */
-	protected MovieRepository() {
+	protected MovieRepository(){
 		movieResponsePages = new ArrayList<>();
 
 		addObserver(DataReloadTimer.getTimer());
 	}
 
-	public String[] getOneCoverByBucket() {
+	public String[] getOneCoverByBucket(){
 		String[] covers = new String[4];
 
 		List<Integer> list = null;
 		List<MovieInfo> movies = null;
 
 		covers[0] = "";
-		for (int i : listAdventure.keySet()) {
+		for(int i : listAdventure.keySet()){
 			list = listAdventure.get(i);
-			if (list != null && list.size() > 0) {
+			if(list != null && list.size() > 0){
 				int movieIndex = getMovieIndexById(list.get(0), movies);
 
 				movies = movieResponsePages.get(movieIndex).getMovies();
@@ -262,14 +280,14 @@ public class MovieRepository extends AbstractRepository {
 				covers[0] = movies.get(movieIndex).getPoster_path();
 			}
 
-			if (covers[0] != null && !covers[0].isEmpty())
+			if(covers[0] != null && !covers[0].isEmpty())
 				break;
 		}
 
 		covers[1] = "";
-		for (int i : listAnimal.keySet()) {
+		for(int i : listAnimal.keySet()){
 			list = listAnimal.get(i);
-			if (list != null && list.size() > 0) {
+			if(list != null && list.size() > 0){
 				int movieIndex = getMovieIndexById(list.get(0), movies);
 
 				movies = movieResponsePages.get(movieIndex).getMovies();
@@ -277,14 +295,14 @@ public class MovieRepository extends AbstractRepository {
 				covers[1] = movies.get(movieIndex).getPoster_path();
 			}
 
-			if (covers[1] != null && !covers[1].isEmpty())
+			if(covers[1] != null && !covers[1].isEmpty())
 				break;
 		}
 
 		covers[2] = "";
-		for (int i : listPrincess.keySet()) {
+		for(int i : listPrincess.keySet()){
 			list = listPrincess.get(i);
-			if (list != null && list.size() > 0) {
+			if(list != null && list.size() > 0){
 				int movieIndex = getMovieIndexById(list.get(0), movies);
 
 				movies = movieResponsePages.get(movieIndex).getMovies();
@@ -292,14 +310,14 @@ public class MovieRepository extends AbstractRepository {
 				covers[2] = movies.get(movieIndex).getPoster_path();
 			}
 
-			if (covers[2] != null && !covers[2].isEmpty())
+			if(covers[2] != null && !covers[2].isEmpty())
 				break;
 		}
 
 		covers[3] = "";
-		for (int i : listTech.keySet()) {
+		for(int i : listTech.keySet()){
 			list = listTech.get(i);
-			if (list != null && list.size() > 0) {
+			if(list != null && list.size() > 0){
 				int movieIndex = getMovieIndexById(list.get(0), movies);
 
 				movies = movieResponsePages.get(movieIndex).getMovies();
@@ -307,29 +325,29 @@ public class MovieRepository extends AbstractRepository {
 				covers[3] = movies.get(movieIndex).getPoster_path();
 			}
 
-			if (covers[3] != null && !covers[3].isEmpty())
+			if(covers[3] != null && !covers[3].isEmpty())
 				break;
 		}
 
 		return covers;
 	}
 
-	private int getMovieIndexById(Integer movieIndex, List<MovieInfo> movies) {
+	private int getMovieIndexById(Integer movieIndex, List<MovieInfo> movies){
 		int i = -1;
 
-		while (++i < movies.size()) {
-			if (movies.get(i).getId() == movieIndex.intValue())
+		while(++i < movies.size()){
+			if(movies.get(i).getId() == movieIndex.intValue())
 				return i;
 		}
 
 		return -1;
 	}
 
-	public String[] getCoversFromBucket(Integer genreId) {
+	public String[] getCoversFromBucket(Integer genreId){
 		String[] covers = new String[5];
 
 		Map<Integer, List<Integer>> bucketMap;
-		switch (genreId) {
+		switch(genreId){
 		case 0:
 			bucketMap = listAdventure;
 			break;
@@ -347,31 +365,31 @@ public class MovieRepository extends AbstractRepository {
 		}
 
 		int i = 0;
-		for (Integer j : bucketMap.keySet()) {
+		for(Integer j : bucketMap.keySet()){
 			List<Integer> list = bucketMap.get(j);
-			if (list != null)
-				for (Integer k : list) {
-					if (i >= 0) {
+			if(list != null)
+				for(Integer k : list){
+					if(i >= 0){
 						int movieIndex = getMovieIndexById(k, movieResponsePages.get(j - 1).getMovies());
 
-						if (movieIndex > 0)
+						if(movieIndex > 0)
 							covers[i++] = movieResponsePages.get(j - 1).getMovies().get(movieIndex).getPoster_path();
 					}
 
-					if (i == 5)
+					if(i == 5)
 						break;
 				}
-			if (i == 5)
+			if(i == 5)
 				break;
 		}
 
 		return covers;
 	}
 
-	public String getCoverFromBucket(Integer genreId) {
+	public String getCoverFromBucket(Integer genreId){
 		Map<Integer, List<Integer>> bucketMap;
-		
-		switch (genreId) {
+
+		switch(genreId){
 		case 0:
 			bucketMap = listAdventure;
 			break;
@@ -388,13 +406,13 @@ public class MovieRepository extends AbstractRepository {
 			return null;
 		}
 
-		for (Integer j : bucketMap.keySet()) {
+		for(Integer j : bucketMap.keySet()){
 			List<Integer> list = bucketMap.get(j);
-			if (list != null)
-				for (Integer k : list) {
+			if(list != null)
+				for(Integer k : list){
 					int movieIndex = getMovieIndexById(k, movieResponsePages.get(j - 1).getMovies());
 
-					if (movieIndex > 0)
+					if(movieIndex > 0)
 						return movieResponsePages.get(j - 1).getMovies().get(movieIndex).getPoster_path();
 				}
 		}

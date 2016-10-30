@@ -8,7 +8,7 @@ public class JsonObject implements ObjectFactory {
 
 	@Override
 	public MovieResponseAPI createObject(String JsonFile){
-		System.out.println(JsonFile);
+		//System.out.println(JsonFile);
 		return (MovieResponseAPI) new Gson().fromJson(JsonFile, MovieResponseAPI.class);
 	}
 	
