@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import io.github.newnc.model.MovieInfo;
-import io.github.newnc.model.MovieResponseAPI;
+import io.github.newnc.model.MovieResponse;
 
 public class Print{
 
@@ -68,7 +68,7 @@ public class Print{
 		}
 	}
 
-	public static void allCategoriesList(List<MovieResponseAPI> movieResponsePages,
+	public static void allCategoriesList(List<MovieResponse> movieResponsePages,
 			Map<Integer, List<Integer>> listAdventure, Map<Integer, List<Integer>> listAnimal,
 			Map<Integer, List<Integer>> listPrincess, Map<Integer, List<Integer>> listTech){
 		if(ACTIVATED){

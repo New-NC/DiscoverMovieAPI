@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.newnc.model.MovieResponse;
-import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.model.repository.MovieRepository;
 import io.github.newnc.model.repository.NewestMovieRepository;
 import io.github.newnc.model.repository.TopRatedMovieRepository;
@@ -46,7 +45,7 @@ public class MoviesService {
 	}
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)
-	public MovieResponseAPI movies() {
+	public MovieResponse movies() {
 		if(debug) System.out.println("movies()");
 
 		for(MovieRepository r : repositories){
@@ -57,7 +56,7 @@ public class MoviesService {
 			}
 		}
 
-		MovieResponseAPI movieData = repositories.get(0).getPage(1);
+		MovieResponse movieData = repositories.get(0).getPage(1);
 
 		if(debug) System.out.println("AEHOOO!!");
 
@@ -77,9 +76,10 @@ public class MoviesService {
 
 		try {
 			for (int i = 0; i < numRepos; i++) {
+				//covers[i] = repositories.get(i).getCoverFromBucket(0);
 				covers[i] = repositories.get(i).getPage(1).getMovies()
-								.get(0)
-								.getPoster_path();
+						.get(0)
+.getPoster_path();
 				System.out.println(repositories.get(i));
 				System.out.println(covers[i]);
 			}

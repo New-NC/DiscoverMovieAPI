@@ -39,14 +39,14 @@ public class MovieRepository extends AbstractRepository{
 	/**
 	 * This fields represents a list of pages of the response from TMDB API.
 	 */
-	protected List<MovieResponseAPI> movieResponsePages;
+	protected List<MovieResponse> movieResponsePages;
 
 	/**
 	 * Returns a list of pages of this <code>MovieRepository</code> instance.
 	 *
 	 * @return a list of pages of this <code>MovieRepository</code> instance.
 	 */
-	public List<MovieResponseAPI> getPages(){
+	public List<MovieResponse> getPages(){
 		return movieResponsePages;
 	}
 
@@ -57,7 +57,7 @@ public class MovieRepository extends AbstractRepository{
 	 * @return an iterator for the list of <code>pages</code> of this <code>
 	 * MovieRepository</code> instance.
 	 */
-	public Iterator<MovieResponseAPI> getIterator(){
+	public Iterator<MovieResponse> getIterator(){
 		return movieResponsePages.iterator();
 	}
 
@@ -70,7 +70,7 @@ public class MovieRepository extends AbstractRepository{
 	 * @return a specific <code>page</code> of this <code>MovieRepository
 	 * </code> instance.
 	 */
-	public MovieResponseAPI getPage(int numPage){
+	public MovieResponse getPage(int	 numPage){
 		int i;
 		for(i = 0; i < movieResponsePages.size(); i++)
 			if(movieResponsePages.get(i).getPage() == numPage)
@@ -91,8 +91,8 @@ public class MovieRepository extends AbstractRepository{
 		System.out.println("---- MovieRepository -----");
 	}
 
-	protected List<MovieResponseAPI> requestMovies(){
-		List<MovieResponseAPI> list_movies = new ArrayList<>();
+	protected List<MovieResponse> requestMovies(){
+		List<MovieResponse> list_movies = new ArrayList<>();
 
 		for(int i = 1; i <= TMDBRequester.MAXREQUEST; i++){
 			System.out.println("Get page: " + i);
@@ -107,13 +107,13 @@ public class MovieRepository extends AbstractRepository{
 		return list_movies;
 	}
 
-	protected MovieResponseAPI getMovieResponse(String apiResponse){
+	protected MovieResponse getMovieResponse(String apiResponse){
 
 		JsonObject jsonObjectFactory = new JsonObject();
 		MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse);
 		movieData.labelMovies();
 
-		return movieData;
+		return MovieResponse.createMovieResponse(movieData);
 	}
 
 	protected boolean notFilledAllCategories(int[] qtyCat){
@@ -128,9 +128,9 @@ public class MovieRepository extends AbstractRepository{
 		return false;
 	}
 
-	protected MovieResponseAPI categorySetter(int i, String apiResponse, int[] qty){
+	protected MovieResponse categorySetter(int i, String apiResponse, int[] qty){
 
-		MovieResponseAPI movieData = getMovieResponse(apiResponse);
+		MovieResponse movieData = getMovieResponse(apiResponse);
 
 		Set<Integer> adventureMovieIds = new HashSet<Integer>();
 		Set<Integer> animalMovieIds = new HashSet<Integer>();

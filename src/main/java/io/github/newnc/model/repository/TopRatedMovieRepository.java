@@ -3,7 +3,7 @@ package io.github.newnc.model.repository;
 import java.util.ArrayList;
 
 import io.github.newnc.debug.Print;
-import io.github.newnc.model.MovieResponseAPI;
+import io.github.newnc.model.MovieResponse;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.TMDBRequester;
 
@@ -26,7 +26,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
 				String apiResponse = TMDBRequester.requestPageTopRated(i);
 
-        MovieResponseAPI movieData = categorySetter(i, apiResponse, qtyCat);
+				MovieResponse movieData = categorySetter(i, apiResponse, qtyCat);
 
 				movieResponsePages.add(movieData);
 

@@ -1,6 +1,7 @@
 package io.github.newnc.model;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -82,16 +83,18 @@ public class MovieResponse {
 		this.total_pages = total_pages;
 	}
 	
-	/*public static MovieResponse createMovieResponse(MovieResponseAPI responseAPI) throws Exception {
+	public static MovieResponse createMovieResponse(MovieResponseAPI responseAPI) {
 		MovieResponse response = new MovieResponse();
 		
-		MovieInfo[] tempInfoArrays = responseAPI.getMovies();
-		if (tempInfoArrays != null)
-			response.setMovies(new OverviewSearcher().execute(tempInfoArrays));
-		response.setPage(responseAPI.getPage());
-		response.setTotal_pages(responseAPI.getTotal_pages());
+		List<MovieInfo> tempInfoArrays = new ArrayList<>();
+		for (MovieInfo info : responseAPI.getMovies())
+			if (!info.getLabels().isEmpty())
+				tempInfoArrays.add(info);
+		response.movies = tempInfoArrays;
+		response.page = responseAPI.getPage();
+		response.total_pages = responseAPI.getTotal_pages();
 		
 		return response;
-	}*/
+	}
 
 }

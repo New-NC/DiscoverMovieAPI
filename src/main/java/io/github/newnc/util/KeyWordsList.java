@@ -198,6 +198,11 @@ public class KeyWordsList {
 		bad.add("PREY");
 		bad.add("PSYCHO");
 		bad.add("CANNABIS");
+		bad.add("BEER");
+		bad.add("NIHILISTIC");
+		bad.add("ALCOHOLIC");
+		bad.add("EVIL");
+		bad.add("PARANORMAL");
 		
 	}
 
