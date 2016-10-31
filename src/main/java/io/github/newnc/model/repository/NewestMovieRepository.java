@@ -32,10 +32,10 @@ public class NewestMovieRepository extends MovieRepository {
 		qtyCat[3] = 0;
 		
 		while (	notFilledAllCategories(qtyCat) ) {
-			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
+			while (i <= j * (TMDBRequester.MAXREQUEST / 4)) {
 				String apiResponse = TMDBRequester.requestPageNewest(i);
 
-				MovieResponse movieData = categorySetter(i, apiResponse, qtyCat);
+				MovieResponse movieData = categorySetter(apiResponse, qtyCat);
 
 				movieResponsePages.add(movieData);
 
@@ -44,12 +44,12 @@ public class NewestMovieRepository extends MovieRepository {
 			j++;
 		}
 
-		Print.allCategoriesList(movieResponsePages, this.listAdventure, this.listAnimal, this.listPrincess, this.listTech);
+		//Print.allCategoriesList(movieResponsePages, this.listAdventure, this.listAnimal, this.listPrincess, this.listTech);
 
 		setChanged();
 		notifyObservers();
 
-		System.out.println("---- end of NewestMovieRepository -----");
+		System.out.println("---- end of update() in NewestMovieRepository -----");
 	}
 
 

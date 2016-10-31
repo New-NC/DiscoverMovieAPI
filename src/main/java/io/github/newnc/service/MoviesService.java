@@ -18,17 +18,19 @@ import io.github.newnc.model.repository.NewestMovieRepository;
 import io.github.newnc.model.repository.TopRatedMovieRepository;
 
 @RestController
-public class MoviesService {
+public class MoviesService{
 
 	private List<MovieRepository> repositories;
+	
+	private int n_categories = 4;
 
 	private boolean debug = true;
 
-	public MoviesService() {
+	public MoviesService(){
 		if(debug) System.out.println("MoviesService");
-		
+
 		// If you don't want to see log messages, comment the line below.
-		//io.github.newnc.debug.Print.activate();
+		// io.github.newnc.debug.Print.activate();
 
 		repositories = new ArrayList<>();
 
@@ -36,37 +38,34 @@ public class MoviesService {
 		repositories.add(TopRatedMovieRepository.getInstance());
 
 		for(MovieRepository r : repositories){
-			try {
-				r.updateIfNeeded();;
-			} catch (Exception e) {
+			try{
+				r.updateIfNeeded();
+				;
+			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
 	}
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)
-	public MovieResponse movies() {
+	public MovieResponse[] movies(){
 		if(debug) System.out.println("movies()");
 
 		for(MovieRepository r : repositories){
-			try {
+			try{
 				r.updateIfNeeded();
-			} catch (Exception e) {
+			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
 
-		MovieResponse movieData = repositories.get(0).getPage(1);
-
-		if(debug) System.out.println("AEHOOO!!");
-
-		System.out.println(repositories.size());
+		MovieResponse[] movieData = { repositories.get(0).getPage(1), repositories.get(1).getPage(1) };
 
 		return movieData;
 	}
 
 	@RequestMapping(value = "/movies/covers", method = RequestMethod.GET)
-	public String[] covers(HttpServletResponse response) {
+	public String[] covers(HttpServletResponse response){
 		if(debug) System.out.println("/movies/covers");
 
 		String[] covers;
@@ -74,24 +73,21 @@ public class MoviesService {
 
 		covers = new String[numRepos];
 
-		try {
-			for (int i = 0; i < numRepos; i++) {
-				//covers[i] = repositories.get(i).getCoverFromBucket(0);
-				covers[i] = repositories.get(i).getPage(1).getMovies()
-						.get(0)
-.getPoster_path();
+		try{
+			for(int i = 0; i < numRepos; i++){
+				covers[i] = repositories.get(i).getRandomCover();
 				System.out.println(repositories.get(i));
 				System.out.println(covers[i]);
 			}
 
-			for (int i = 0; i < numRepos; i++) {
-				if (covers[i] == null || covers[i].isEmpty()) {
+			for(int i = 0; i < numRepos; i++){
+				if(covers[i] == null || covers[i].isEmpty()){
 					response.setStatus(HttpStatus.SC_NO_CONTENT);
 
 					break;
 				}
 			}
-		} catch (NullPointerException npe) {
+		}catch(NullPointerException npe){
 			response.setStatus(HttpStatus.SC_NO_CONTENT);
 		}
 
@@ -99,61 +95,69 @@ public class MoviesService {
 	}
 
 	@RequestMapping(value = "/movies/categories/{id}", method = RequestMethod.GET)
-	public String[] coversCategories(HttpServletResponse response, @PathVariable("id") Integer repositoryId ) {
-		System.out.println("/movies/categories/{id}="+repositoryId);
-		
-		String[] covers = new String[4];
+	public String[] coversCategories(HttpServletResponse response, @PathVariable("id") Integer repositoryId){
+		System.out.println("/movies/categories/{id}=" + repositoryId);
+
+		String[] covers = new String[n_categories];
 
 		MovieRepository repo = null;
-		if (repositoryId == 0)
-			repo = (NewestMovieRepository) repositories.get(repositoryId);
-		else if (repositoryId == 1)
-			repo = (TopRatedMovieRepository) repositories.get(repositoryId);
+		switch(repositoryId){
+			case 0:
+				repo = repositories.get(repositoryId);
+				break;
+				
+			case 1:
+				repo = repositories.get(repositoryId);
+				break;
+		}
 
-		if (repo != null) {
-			covers[0] = repo.getCoverFromBucket(0);
-			covers[1] = repo.getCoverFromBucket(1);
-			covers[2] = repo.getCoverFromBucket(2);
-			covers[3] = repo.getCoverFromBucket(3);
+		if(repo != null){
+			covers = repo.getRandomCoversFromEachCategory();
 		}
 
 		return covers;
 	}
 
 	@RequestMapping(value = "/movies/results/{repo}/{genre}", method = RequestMethod.GET)
-	public String[] getResults(@PathVariable("repo") Integer repositoryId, @PathVariable("genre") Integer genreId) {
-		System.out.println("/movies/results/{repo}="+repositoryId+"/{genre}="+genreId);
+	public String[] getResults(@PathVariable("repo") Integer repositoryId, @PathVariable("genre") Integer genreId){
+		System.out.println("/movies/results/{repo}=" + repositoryId + "/{genre}=" + genreId);
 
-		String[] moviesCovers = new String[5];
+		String[] covers = new String[5];
 
 		MovieRepository repo = null;
-		if (repositoryId == 0)
-			repo = (NewestMovieRepository) repositories.get(repositoryId);
-		else if (repositoryId == 1)
-			repo = (TopRatedMovieRepository) repositories.get(repositoryId);
-
-		if (repo != null) {
-			return repo.getCoversFromBucket(genreId);
+		switch(repositoryId){
+			case 0:
+				repo = repositories.get(repositoryId);
+				break;
+				
+			case 1:
+				repo = repositories.get(repositoryId);
+				break;
 		}
 
-		return moviesCovers;
+		if(repo != null){
+			covers = repo.getRandomCoversForResult(genreId);
+		}
+
+		return covers;
 	}
 
 	@RequestMapping(value = "/reload", method = RequestMethod.GET)
-	public void reload() {
+	public void reload(){
 		for(MovieRepository mR : repositories){
-			try {
+			try{
 				mR.forceUpdate();
-			} catch (Exception e) {
+			}catch(Exception e){
 				e.printStackTrace();
 			}
 		}
 	}
 
 	@RequestMapping(value = "/clear", method = RequestMethod.GET)
-	public void clear() {
+	public void clear(){
 		Iterator<MovieRepository> repository = repositories.iterator();
-		while (repository.hasNext())
-			((MovieRepository) repository.next()).clear();;
+		while(repository.hasNext())
+			((MovieRepository) repository.next()).clear();
+		;
 	}
 }

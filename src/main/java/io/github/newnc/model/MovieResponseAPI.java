@@ -69,8 +69,7 @@ public class MovieResponseAPI {
 	 * @throws IOException
 	 */
 	public void labelMovies(){
-		/* busca nas resenhas e classificacao das labels */
-
+		
 		new OverviewSearcher().execute(this.results);
 
 		Print.moviesTitleAndLabels(this.results);

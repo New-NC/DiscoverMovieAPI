@@ -168,6 +168,10 @@ public class KeyWordsList {
 		s = "SHIP";
 		good.add(s);
 		tech.add(s);
+		
+		s = "MULAN";
+		good.add(s);
+		adventure.add(s);
 
 		// key_words_good.add("MOTHA_FUCKIN_DRAGONS");
 
@@ -203,6 +207,7 @@ public class KeyWordsList {
 		bad.add("ALCOHOLIC");
 		bad.add("EVIL");
 		bad.add("PARANORMAL");
+		bad.add("FRANKENSTEIN");
 		
 	}
 

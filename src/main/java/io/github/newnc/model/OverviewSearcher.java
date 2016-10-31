@@ -62,12 +62,13 @@ public class OverviewSearcher {
 					ov.contains(" "+key_word+".") ||
 					ov.contains(" "+key_word+"S") ||
 					
-					title.contains(" "+key_word+" ")){
+					title.contains(key_word)){
 
 					keywords_by_movie.clear();
 					break;
 				}
 			}
+			
 			m.setLabels(keywords_by_movie);
 
 			Print.howManyLabels(movies);

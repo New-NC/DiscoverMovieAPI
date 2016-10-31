@@ -23,10 +23,10 @@ public class TopRatedMovieRepository extends MovieRepository {
 		qtyCat[3] = 0;
 		
 		while (	notFilledAllCategories(qtyCat) ) {
-			while (i <= j * (TMDBRequester.MAXREQUEST / 2)) {
+			while (i <= j * (TMDBRequester.MAXREQUEST / 4)) {
 				String apiResponse = TMDBRequester.requestPageTopRated(i);
 
-				MovieResponse movieData = categorySetter(i, apiResponse, qtyCat);
+				MovieResponse movieData = categorySetter(apiResponse, qtyCat);
 
 				movieResponsePages.add(movieData);
 
@@ -35,7 +35,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 			j++;
 		}
 
-		Print.allCategoriesList(movieResponsePages, this.listAdventure, this.listAnimal, this.listPrincess, this.listTech);
+		//Print.allCategoriesList(movieResponsePages, this.listAdventure, this.listAnimal, this.listPrincess, this.listTech);
 
 		setChanged();
 		notifyObservers();

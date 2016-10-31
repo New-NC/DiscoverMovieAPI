@@ -12,6 +12,4 @@ public class JsonObject implements ObjectFactory {
 		return (MovieResponseAPI) new Gson().fromJson(JsonFile, MovieResponseAPI.class);
 	}
 	
-
-
 }

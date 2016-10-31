@@ -9,7 +9,6 @@ import java.util.List;
  *
  */
 public class MovieResponse {
-
 	/**
 	 * This field represents the page of the response.
 	 */
@@ -87,9 +86,13 @@ public class MovieResponse {
 		MovieResponse response = new MovieResponse();
 		
 		List<MovieInfo> tempInfoArrays = new ArrayList<>();
-		for (MovieInfo info : responseAPI.getMovies())
-			if (!info.getLabels().isEmpty())
+		
+		for (MovieInfo info : responseAPI.getMovies()){
+			if (!info.getLabels().isEmpty()){
 				tempInfoArrays.add(info);
+			}
+		}
+		
 		response.movies = tempInfoArrays;
 		response.page = responseAPI.getPage();
 		response.total_pages = responseAPI.getTotal_pages();
