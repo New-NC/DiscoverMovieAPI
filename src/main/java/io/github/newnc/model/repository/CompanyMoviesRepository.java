@@ -22,20 +22,13 @@ import io.github.newnc.util.TMDBRequester;
  * This class implements the singleton pattern.
  *
  * @see <a href="http://www.oodesign.com/singleton-pattern.html">Singleton
-	 *      Pattern</a>
+ *      Pattern</a>
  */
-public class MovieRepository extends AbstractRepository{
-	/*
-		listAdventure
-		listAnimal
-		listPrincess
-		listTech
-	*/
-
-	protected List<Integer> listAdventure = new ArrayList<Integer>();
-	protected List<Integer> listAnimal = new ArrayList<Integer>();
-	protected List<Integer> listPrincess = new ArrayList<Integer>();
-	protected List<Integer> listTech = new ArrayList<Integer>();
+public class CompanyMoviesRepository extends AbstractRepository{
+	protected List<Integer> listDisney = new ArrayList<Integer>();
+	protected List<Integer> listDreamworks = new ArrayList<Integer>();
+	protected List<Integer> listGhibili = new ArrayList<Integer>();
+	protected List<Integer> listPixar = new ArrayList<Integer>();
 
 	protected int qtyCategories = 4;
 
@@ -47,9 +40,9 @@ public class MovieRepository extends AbstractRepository{
 	protected List<MovieResponse> movieResponsePages;
 
 	/**
-	 * Returns a list of pages of this <code>MovieRepository</code> instance.
+	 * Returns a list of pages of this <code>CompanyMoviesRepository</code> instance.
 	 *
-	 * @return a list of pages of this <code>MovieRepository</code> instance.
+	 * @return a list of pages of this <code>CompanyMoviesRepository</code> instance.
 	 */
 	public List<MovieResponse> getPages(){
 		return movieResponsePages;
@@ -57,22 +50,22 @@ public class MovieRepository extends AbstractRepository{
 
 	/**
 	 * Returns an iterator for the list of <code>pages</code> of this <code>
-	 * MovieRepository</code> instance.
+	 * CompanyMoviesRepository</code> instance.
 	 *
 	 * @return an iterator for the list of <code>pages</code> of this <code>
-	 * MovieRepository</code> instance.
+	 * CompanyMoviesRepository</code> instance.
 	 */
 	public Iterator<MovieResponse> getIterator(){
 		return movieResponsePages.iterator();
 	}
 
 	/**
-	 * Returns a specific <code>page</code> of this <code>MovieRepository
+	 * Returns a specific <code>page</code> of this <code>CompanyMoviesRepository
 	 * </code> instance.
 	 *
 	 * @param numPage
 	 *            the number of the <code>page</code>.
-	 * @return a specific <code>page</code> of this <code>MovieRepository
+	 * @return a specific <code>page</code> of this <code>CompanyMoviesRepository
 	 * </code> instance.
 	 */
 	public MovieResponse getPage(int numPage){
@@ -93,7 +86,7 @@ public class MovieRepository extends AbstractRepository{
 		setChanged();
 		notifyObservers();
 
-		System.out.println("---- MovieRepository -----");
+		System.out.println("---- CompanyMoviesRepository -----");
 	}
 
 	protected List<MovieResponse> requestMovies(){
@@ -153,10 +146,10 @@ public class MovieRepository extends AbstractRepository{
 
 		MovieResponse movieData = getMovieResponse(apiResponse);
 
-		Set<Integer> adventureMovieIds = new HashSet<Integer>();
-		Set<Integer> animalMovieIds = new HashSet<Integer>();
-		Set<Integer> princessMovieIds = new HashSet<Integer>();
-		Set<Integer> techMovieIds = new HashSet<Integer>();
+		Set<Integer> disneyMovieIds = new HashSet<Integer>();
+		Set<Integer> pixarMovieIds = new HashSet<Integer>();
+		Set<Integer> dreamWorksMovieIds = new HashSet<Integer>();
+		Set<Integer> ghibiliMovieIds = new HashSet<Integer>();
 
 		List<MovieInfo> tempMI = movieData.getMovies();
 		List<String> tempMovieLabels, tempCatLabels;
@@ -170,7 +163,7 @@ public class MovieRepository extends AbstractRepository{
 				for(String advLabel : tempCatLabels){
 
 					if(label.equals(advLabel)){
-						adventureMovieIds.add(m.getId());
+						disneyMovieIds.add(m.getId());
 						qty[0]++;
 					}
 				}
@@ -179,7 +172,7 @@ public class MovieRepository extends AbstractRepository{
 				for(String animalLabel : tempCatLabels){
 
 					if(label.equals(animalLabel)){
-						animalMovieIds.add(m.getId());
+						pixarMovieIds.add(m.getId());
 						qty[1]++;
 					}
 				}
@@ -188,7 +181,7 @@ public class MovieRepository extends AbstractRepository{
 				for(String prinLabel : tempCatLabels){
 
 					if(label.equals(prinLabel)){
-						princessMovieIds.add(m.getId());
+						dreamWorksMovieIds.add(m.getId());
 						qty[2]++;
 					}
 				}
@@ -197,27 +190,27 @@ public class MovieRepository extends AbstractRepository{
 				for(String techLabel : tempCatLabels){
 
 					if(label.equals(techLabel)){
-						techMovieIds.add(m.getId());
+						ghibiliMovieIds.add(m.getId());
 						qty[3]++;
 					}
 				}
 			}
 		}
 		
-		for(Integer id : adventureMovieIds){
-			listAdventure.add(id);
+		for(Integer id : disneyMovieIds){
+			listDisney.add(id);
 		}
 
-		for(Integer id : animalMovieIds){
-			listAnimal.add(id);
+		for(Integer id : pixarMovieIds){
+			listPixar.add(id);
 		}
 
-		for(Integer id : princessMovieIds){
-			listPrincess.add(id);
+		for(Integer id : dreamWorksMovieIds){
+			listDreamworks.add(id);
 		}
 
-		for(Integer id : techMovieIds){
-			listTech.add(id);
+		for(Integer id : ghibiliMovieIds){
+			listGhibili.add(id);
 		}
 
 		//Print.labelsPerPage(listAdventure, listAnimal, listPrincess, listTech);
@@ -253,22 +246,22 @@ public class MovieRepository extends AbstractRepository{
 	/**
 	 * This fields represents a instance of this class.
 	 */
-	private static MovieRepository instance;
+	private static CompanyMoviesRepository instance;
 
 	/**
 	 * Returns an instance of this class.
 	 *
 	 * @return an instance of this class.
 	 */
-	public static synchronized MovieRepository getInstance(){
-		if(instance == null) instance = new MovieRepository();
+	public static synchronized CompanyMoviesRepository getInstance(){
+		if(instance == null) instance = new CompanyMoviesRepository();
 		return instance;
 	}
 
 	/**
 	 * Default constructor.
 	 */
-	protected MovieRepository(){
+	protected CompanyMoviesRepository(){
 		movieResponsePages = new ArrayList<>();
 
 		addObserver(DataReloadTimer.getTimer());
@@ -290,19 +283,19 @@ public class MovieRepository extends AbstractRepository{
 		
 		switch(category){
 			case 0:
-				m = this.listAdventure;
+				m = this.listDisney;
 				break;
 				
 			case 1:
-				m = this.listAnimal;
+				m = this.listPixar;
 				break;
 				
 			case 2:
-				m = this.listPrincess;
+				m = this.listDreamworks;
 				break;
 				
 			case 3:
-				m = this.listTech;
+				m = this.listGhibili;
 				break;
 		}
 		
@@ -326,27 +319,27 @@ public class MovieRepository extends AbstractRepository{
 		
 		int random_pos, it=0, max=20;
 		
-		random_pos = r.nextInt(this.listAdventure.size());
-		covers[0] = findMovieById(listAdventure.get(random_pos)).getPoster_path();
+		random_pos = r.nextInt(this.listDisney.size());
+		covers[0] = findMovieById(listDisney.get(random_pos)).getPoster_path();
 		
 		it=0;
 		do{
-			random_pos = r.nextInt(this.listAnimal.size());
-			covers[1] = findMovieById(listAnimal.get(random_pos)).getPoster_path();
+			random_pos = r.nextInt(this.listPixar.size());
+			covers[1] = findMovieById(listPixar.get(random_pos)).getPoster_path();
 			it++;
 		} while(covers[1].equals(covers[0]) && it<max);
 
 		it=0;
 		do{
-			random_pos = r.nextInt(this.listPrincess.size());
-			covers[2] = findMovieById(listPrincess.get(random_pos)).getPoster_path();
+			random_pos = r.nextInt(this.listDreamworks.size());
+			covers[2] = findMovieById(listDreamworks.get(random_pos)).getPoster_path();
 			it++;
 		} while((covers[2].equals(covers[0]) || covers[2].equals(covers[1])) && it<max);
 
 		it=0;
 		do{
-			random_pos = r.nextInt(this.listTech.size());
-			covers[3] = findMovieById(listTech.get(random_pos)).getPoster_path();
+			random_pos = r.nextInt(this.listGhibili.size());
+			covers[3] = findMovieById(listGhibili.get(random_pos)).getPoster_path();
 			it++;
 		} while((covers[3].equals(covers[0]) || covers[3].equals(covers[1]) || covers[3].equals(covers[2])) && it<max);
 		
@@ -361,16 +354,16 @@ public class MovieRepository extends AbstractRepository{
 		
 		switch(category){
 			case 0:
-				m = this.listAdventure;
+				m = this.listDisney;
 				break;
 			case 1:
-				m = this.listAnimal;
+				m = this.listPixar;
 				break;
 			case 2:
-				m = this.listPrincess;
+				m = this.listDreamworks;
 				break;
 			case 3:
-				m = this.listTech;
+				m = this.listGhibili;
 				break;
 		}
 			
