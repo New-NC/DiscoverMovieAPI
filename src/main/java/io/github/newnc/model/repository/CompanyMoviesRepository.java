@@ -76,7 +76,6 @@ public class CompanyMoviesRepository extends AbstractRepository{
 		return null;
 	}
 
-	/* vvvvvvvvvvvvvvv Unused  vvvvvvvvvvvvvvvvvv*/
 	@Override
 	protected void update() throws Exception{
 		Print.updateTime(this.getClass().getName());
@@ -92,20 +91,36 @@ public class CompanyMoviesRepository extends AbstractRepository{
 	protected List<MovieResponse> requestMovies(){
 		List<MovieResponse> list_movies = new ArrayList<>();
 
-		for(int i = 1; i <= TMDBRequester.MAXREQUEST; i++){
+		for(int i = 1; i <= TMDBRequester.MAXREQUEST/4; i++){
 			System.out.println("Get page: " + i);
 
-			String apiResponse = TMDBRequester.requestPage(i);
-			list_movies.add(getMovieResponse(apiResponse));
-
-			System.out.println("---- Teste -----");
-			System.out.println(movieResponsePages.get(movieResponsePages.size() - 1).getMovies().get(0).getLabels());
+			String apiResponse = TMDBRequester.requestPageDisney(i);
+			MovieResponse movieReponse = getMovieResponse(apiResponse);
+			for (MovieInfo info : movieReponse.getMovies())
+				listDisney.add(info.getId());
+			list_movies.add(movieReponse);
+			
+			apiResponse = TMDBRequester.requestPageDreamworks(i);
+			movieReponse = getMovieResponse(apiResponse);
+			for (MovieInfo info : movieReponse.getMovies())
+				listDreamworks.add(info.getId());
+			list_movies.add(movieReponse);
+			
+			apiResponse = TMDBRequester.requestPageGhibili(i);
+			movieReponse = getMovieResponse(apiResponse);
+			for (MovieInfo info : movieReponse.getMovies())
+				listGhibili.add(info.getId());
+			list_movies.add(movieReponse);
+			
+			apiResponse = TMDBRequester.requestPagePixar(i);
+			movieReponse = getMovieResponse(apiResponse);
+			for (MovieInfo info : movieReponse.getMovies())
+				listPixar.add(info.getId());
+			list_movies.add(movieReponse);
 		}
 
 		return list_movies;
 	}
-	/* vvvvvvvvvvvvvvv End of Unused  vvvvvvvvvvvvvvvvvv*/
-	/* Because each repository treats the update individually */
 
 	protected MovieResponse getMovieResponse(String apiResponse){
 

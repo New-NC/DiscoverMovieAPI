@@ -40,16 +40,15 @@ public class MoviesService {
 		repositories.add(NewestMovieRepository.getInstance());
 		repositories.add(TopRatedMovieRepository.getInstance());
 
-		for (MovieRepository r : repositories) {
-			try {
+		try {
+			for (MovieRepository r : repositories)
 				r.updateIfNeeded();
-				;
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+			
+			companyMoviesRepository = CompanyMoviesRepository.getInstance();
+			companyMoviesRepository.updateIfNeeded();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		companyMoviesRepository = CompanyMoviesRepository.getInstance();
 	}
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)

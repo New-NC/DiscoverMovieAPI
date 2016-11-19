@@ -53,5 +53,35 @@ public class TMDBRequester {
 		}
 		return null;
 	}
+	
+	public static String requestPageDisney(int page) {
+		return requestPageCompanyBased(page, 2);
+	}
+	
+	public static String requestPagePixar(int page) {
+		return requestPageCompanyBased(page, 3);
+	}
+	
+	public static String requestPageDreamworks(int page) {
+		return requestPageCompanyBased(page, 521);
+	}
+	
+	public static String requestPageGhibili(int page) {
+		return requestPageCompanyBased(page, 10342);
+	}
+
+	public static String requestPageCompanyBased(int page, int company){
+		try {
+			HttpResponse<JsonNode> response =
+					Unirest.get("https://api.themoviedb.org/3/discover/movie"
+							+ "?api_key=" + APIKEY
+							+ "&certification_country=US&certification.lte=G"
+							+ "&with_company=" + company + "&page=" + page).asJson();
+			return response.getBody().toString();
+		} catch (UnirestException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 }
