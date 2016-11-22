@@ -125,7 +125,7 @@ public class MovieRepository extends AbstractRepository{
 		*/
 		List<MovieInfo> tempMI = movieData.getMovies();
 		for(MovieInfo mi : tempMI){
-			mi.setId(MovieInfo.base_id);
+			//mi.setId(MovieInfo.base_id);
 			MovieInfo.base_id++; // <-- CAREFUL WITH THIS MOTHERFUCKER !
 		}
 		/*
@@ -355,7 +355,7 @@ public class MovieRepository extends AbstractRepository{
 	
 	
 	public String[] getRandomCoversForResult(int category){
-		String[] covers = new String[5];
+		String[] covers = new String[10];
 		
 		List<Integer> m = null;
 		
@@ -379,7 +379,13 @@ public class MovieRepository extends AbstractRepository{
 			Random r = new Random();
 			
 			for(int i=0; i<5; i++){
-				covers[i] = findMovieById(m.get(r.nextInt(size_list))).getPoster_path();			
+				MovieInfo movieInfo = findMovieById(m.get(r.nextInt(size_list)));
+				covers[i*2] = movieInfo.getPoster_path();
+				covers[i*2+1] = Integer.toString(movieInfo.getId());
+				System.out.println(covers[i*2]);
+				System.out.println(covers[i*2+1]);
+				System.out.println(movieInfo.getId());
+				System.out.println("" + movieInfo.getId());
 			}
 		}
 		
