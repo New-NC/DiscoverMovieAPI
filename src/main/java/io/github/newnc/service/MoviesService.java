@@ -41,11 +41,29 @@ public class MoviesService {
 		repositories.add(TopRatedMovieRepository.getInstance());
 
 		try {
+			boolean npe = true;
 			for (MovieRepository r : repositories)
-				r.updateIfNeeded();
+				while (npe) {
+					npe = false;
+					try {
+						r.updateIfNeeded();
+					} catch (NullPointerException e) {
+						npe = true;
+						e.printStackTrace();
+					}
+				}
 			
 			companyMoviesRepository = CompanyMoviesRepository.getInstance();
-			companyMoviesRepository.updateIfNeeded();
+			npe = true;
+			while (npe) {
+				npe = false;
+				try {
+					companyMoviesRepository.updateIfNeeded();
+				} catch (NullPointerException e) {
+					npe = true;
+					e.printStackTrace();
+				}
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
