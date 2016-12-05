@@ -126,7 +126,7 @@ public class MovieRepository extends AbstractRepository{
 		List<MovieInfo> tempMI = movieData.getMovies();
 		for(MovieInfo mi : tempMI){
 			//mi.setId(MovieInfo.base_id);
-			MovieInfo.base_id++; // <-- CAREFUL WITH THIS MOTHERFUCKER !
+			MovieInfo.base_id++; // <-- CAREFUL WITH THIS!
 		}
 		/*
 			******* END OF DANGEROUS THINGS *******

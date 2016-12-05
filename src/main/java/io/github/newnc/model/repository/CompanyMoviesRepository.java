@@ -25,6 +25,7 @@ import io.github.newnc.util.TMDBRequester;
  *      Pattern</a>
  */
 public class CompanyMoviesRepository extends AbstractRepository{
+	
 	protected List<Integer> listDisney = new ArrayList<Integer>();
 	protected List<Integer> listDreamworks = new ArrayList<Integer>();
 	protected List<Integer> listGhibili = new ArrayList<Integer>();

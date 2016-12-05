@@ -28,6 +28,7 @@ public class MoviesService {
 
 	private boolean debug = true;
 
+	
 	public MoviesService() {
 		if (debug)
 			System.out.println("MoviesService");
