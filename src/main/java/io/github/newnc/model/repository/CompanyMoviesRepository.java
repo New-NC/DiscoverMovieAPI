@@ -78,7 +78,7 @@ public class CompanyMoviesRepository extends AbstractRepository{
 	}
 
 	@Override
-	protected void update() throws Exception{
+	protected void update() throws InterruptedException{
 		Print.updateTime(this.getClass().getName());
 
 		movieResponsePages = requestMovies();
@@ -86,7 +86,7 @@ public class CompanyMoviesRepository extends AbstractRepository{
 		setChanged();
 		notifyObservers();
 
-		System.out.println("---- CompanyMoviesRepository -----");
+		System.out.println("---- end of update() in CompanyMoviesRepository -----");
 	}
 
 	protected List<MovieResponse> requestMovies(){
@@ -133,10 +133,12 @@ public class CompanyMoviesRepository extends AbstractRepository{
 			******* DANGEROUS THINGS AHEAD *******
 		*/
 		List<MovieInfo> tempMI = movieData.getMovies();
-		for(MovieInfo mi : tempMI){
-			mi.setId(MovieInfo.base_id);
-			MovieInfo.base_id++; // <-- CAREFUL WITH THIS MOTHERFUCKER !
-		}
+		if(tempMI == null) System.out.println("tempMI is null!");
+		else
+			for(MovieInfo mi : tempMI){
+				mi.setId(MovieInfo.base_id);
+				MovieInfo.base_id++; // <-- CAREFUL WITH THIS MOTHERFUCKER !
+			}
 		/*
 			******* END OF DANGEROUS THINGS *******
 		*/
@@ -235,12 +237,12 @@ public class CompanyMoviesRepository extends AbstractRepository{
 	}
 
 	@Override
-	public void updateIfNeeded() throws Exception{
+	public void updateIfNeeded() throws InterruptedException{
 		if(isEmpty()) update();
 	}
 
 	@Override
-	public void forceUpdate() throws Exception{
+	public void forceUpdate() throws InterruptedException{
 		clear();
 
 		update();
@@ -285,7 +287,7 @@ public class CompanyMoviesRepository extends AbstractRepository{
 	
 	
 	public String getRandomCover(){
-		String s = "HARAMBE";
+		String s = "HARAMBEDIEDFOROURSINS";
 		
 		Random r = new Random();
 
@@ -326,7 +328,6 @@ public class CompanyMoviesRepository extends AbstractRepository{
 		return s;
 		
 	}
-
 	
 	public String[] getRandomCoversFromEachCategory(){
 		String[] covers = new String[4];

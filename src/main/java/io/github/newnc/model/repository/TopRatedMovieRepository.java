@@ -1,8 +1,5 @@
 package io.github.newnc.model.repository;
 
-import java.util.ArrayList;
-
-import io.github.newnc.debug.Print;
 import io.github.newnc.model.MovieResponse;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.TMDBRequester;
@@ -10,7 +7,7 @@ import io.github.newnc.util.TMDBRequester;
 public class TopRatedMovieRepository extends MovieRepository {
 
 	@Override
-	protected void update() throws Exception {
+	protected void update() throws InterruptedException {
 
 		int i = 1;
 		int j = 1;
@@ -40,7 +37,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 		setChanged();
 		notifyObservers();
 
-		System.out.println("---- TopRatedMovieRepository -----");
+		System.out.println("---- end of update() in TopRatedMovieRepository -----");
 	}
 
 	/**
@@ -63,7 +60,7 @@ public class TopRatedMovieRepository extends MovieRepository {
 	 * Default constructor.
 	 */
 	protected TopRatedMovieRepository() {
-		movieResponsePages = new ArrayList<>();
+		init();
 
 		addObserver(DataReloadTimer.getTimer());
 	}

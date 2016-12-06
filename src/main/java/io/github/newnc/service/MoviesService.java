@@ -30,8 +30,7 @@ public class MoviesService {
 
 	
 	public MoviesService() {
-		if (debug)
-			System.out.println("MoviesService");
+		System.out.println("MoviesService");
 
 		// If you don't want to see log messages, comment the line below.
 		// io.github.newnc.debug.Print.activate();

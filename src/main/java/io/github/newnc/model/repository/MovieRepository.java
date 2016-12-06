@@ -2,19 +2,16 @@ package io.github.newnc.model.repository;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import io.github.newnc.debug.Print;
 import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponse;
 import io.github.newnc.model.MovieResponseAPI;
 import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.KeyWordsList;
-import io.github.newnc.util.TMDBRequester;
 
 /**
  * This class represents an in-memory repository of movies gets from TMDB API.
@@ -32,10 +29,10 @@ public class MovieRepository extends AbstractRepository{
 		listTech
 	*/
 
-	protected List<Integer> listAdventure = new ArrayList<Integer>();
-	protected List<Integer> listAnimal = new ArrayList<Integer>();
-	protected List<Integer> listPrincess = new ArrayList<Integer>();
-	protected List<Integer> listTech = new ArrayList<Integer>();
+	protected List<Integer> listAdventure;
+	protected List<Integer> listAnimal;
+	protected List<Integer> listPrincess;
+	protected List<Integer> listTech;
 
 	protected int qtyCategories = 4;
 
@@ -45,26 +42,6 @@ public class MovieRepository extends AbstractRepository{
 	 * This fields represents a list of pages of the response from TMDB API.
 	 */
 	protected List<MovieResponse> movieResponsePages;
-
-	/**
-	 * Returns a list of pages of this <code>MovieRepository</code> instance.
-	 *
-	 * @return a list of pages of this <code>MovieRepository</code> instance.
-	 */
-	public List<MovieResponse> getPages(){
-		return movieResponsePages;
-	}
-
-	/**
-	 * Returns an iterator for the list of <code>pages</code> of this <code>
-	 * MovieRepository</code> instance.
-	 *
-	 * @return an iterator for the list of <code>pages</code> of this <code>
-	 * MovieRepository</code> instance.
-	 */
-	public Iterator<MovieResponse> getIterator(){
-		return movieResponsePages.iterator();
-	}
 
 	/**
 	 * Returns a specific <code>page</code> of this <code>MovieRepository
@@ -82,37 +59,6 @@ public class MovieRepository extends AbstractRepository{
 
 		return null;
 	}
-
-	/* vvvvvvvvvvvvvvv Unused  vvvvvvvvvvvvvvvvvv*/
-	@Override
-	protected void update() throws Exception{
-		Print.updateTime(this.getClass().getName());
-
-		movieResponsePages = requestMovies();
-
-		setChanged();
-		notifyObservers();
-
-		System.out.println("---- MovieRepository -----");
-	}
-
-	protected List<MovieResponse> requestMovies(){
-		List<MovieResponse> list_movies = new ArrayList<>();
-
-		for(int i = 1; i <= TMDBRequester.MAXREQUEST; i++){
-			System.out.println("Get page: " + i);
-
-			String apiResponse = TMDBRequester.requestPage(i);
-			list_movies.add(getMovieResponse(apiResponse));
-
-			System.out.println("---- Teste -----");
-			System.out.println(movieResponsePages.get(movieResponsePages.size() - 1).getMovies().get(0).getLabels());
-		}
-
-		return list_movies;
-	}
-	/* vvvvvvvvvvvvvvv End of Unused  vvvvvvvvvvvvvvvvvv*/
-	/* Because each repository treats the update individually */
 
 	protected MovieResponse getMovieResponse(String apiResponse){
 
@@ -138,15 +84,15 @@ public class MovieRepository extends AbstractRepository{
 	}
 
 	protected boolean notFilledAllCategories(int[] qtyCat){
-		System.out.println("notFilledAllCategories(): qtyCat { " + qtyCat[0] + " " + qtyCat[1] + " " + qtyCat[2] + " "
+		System.out.println("notFilledAllCategories(): qtyCat { "
+				+ qtyCat[0] + " " 
+				+ qtyCat[1] + " " 
+				+ qtyCat[2] + " " 
 				+ qtyCat[3] + " }");
 
 		int min = 6;
 
-		if(qtyCat[0] < min || qtyCat[1] < min || qtyCat[2] < min || qtyCat[3] < min){
-			return true;
-		}
-		return false;
+		return (qtyCat[0] < min || qtyCat[1] < min || qtyCat[2] < min || qtyCat[3] < min);
 	}
 
 	protected MovieResponse categorySetter(String apiResponse, int[] qty){
@@ -220,26 +166,30 @@ public class MovieRepository extends AbstractRepository{
 			listTech.add(id);
 		}
 
-		//Print.labelsPerPage(listAdventure, listAnimal, listPrincess, listTech);
-
 		return movieData;
 	}
 
 	@Override
-	public void updateIfNeeded() throws Exception{
+	public void updateIfNeeded() throws InterruptedException{
 		if(isEmpty()) update();
 	}
 
 	@Override
-	public void forceUpdate() throws Exception{
+	public void forceUpdate() throws InterruptedException{
 		clear();
-
 		update();
 	}
 
 	@Override
 	public void clear(){
 		movieResponsePages.clear();
+		
+		listAdventure.clear();
+		listAnimal.clear();
+		listPrincess.clear();
+		listTech.clear();
+		
+		System.out.println("MovieRepository cleared");
 
 		setChanged();
 		notifyObservers();
@@ -269,14 +219,25 @@ public class MovieRepository extends AbstractRepository{
 	 * Default constructor.
 	 */
 	protected MovieRepository(){
-		movieResponsePages = new ArrayList<>();
+		init();
 
 		addObserver(DataReloadTimer.getTimer());
 	}
 	
+	protected void init(){
+		System.out.println("Init called from "+this.getClass());
+		
+		this.movieResponsePages = new ArrayList<>();
+		
+		this.listAdventure = new ArrayList<>();
+		this.listAnimal = new ArrayList<>();
+		this.listPrincess = new ArrayList<>();
+		this.listTech = new ArrayList<>();
+	}
+	
 	
 	public String getRandomCover(){
-		String s = "HARAMBE";
+		String s = "HITLERDIDNOTHINGWRONG";
 		
 		Random r = new Random();
 
@@ -394,7 +355,7 @@ public class MovieRepository extends AbstractRepository{
 	
 	
 	public MovieInfo findMovieById(int movie_id){
-		MovieInfo this_movie = null;
+		MovieInfo found_it = null;
 
 		// Busca em cada filme de cada página pelo filme que tenha o id procurado
 		for(MovieResponse mr : movieResponsePages){
@@ -404,17 +365,23 @@ public class MovieRepository extends AbstractRepository{
 			for(MovieInfo mi : tempListMI){
 				if(mi.getId() == movie_id){
 					//System.out.println("FOUND SOMEONE "+mi.getId()+" "+mi.getTitle());
-					this_movie = mi;
+					found_it = mi;
 					break;
 				}
 			}
 			
-			if(this_movie != null){
+			if(found_it != null){
 				break;
 			}
 		}
 		
-		return this_movie;
+		return found_it;
+	}
+
+	@Override
+	protected void update() throws InterruptedException{
+		// Not used
+		
 	}
 	
 }
