@@ -15,7 +15,7 @@ import org.springframework.web.util.NestedServletException;
 import ch.qos.logback.core.status.Status;
 import io.github.newnc.ServerApplication;
 //import io.github.newnc.model.repository.AbstractRepository;
-import io.github.newnc.model.repository.MovieRepository;
+import io.github.newnc.model.repository.MoviesRepository;
 
 import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -60,18 +60,6 @@ public class MoviesServiceTest {
 		mockMvc.perform(get("/movies/covers/"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(contentType));
-	}
-	
-	@Test
-	public void getInexistCovers() throws Exception {
-		try {
-			mockMvc.perform(get("/clear"));
-		} catch (NestedServletException nse) {
-			System.out.println("Poxa, que chato né, ser interrompido...");
-		}
-		
-		mockMvc.perform(get("/movies/covers/"))
-				.andExpect(status().isNoContent());
 	}
 
 }

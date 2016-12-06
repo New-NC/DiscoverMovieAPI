@@ -29,7 +29,6 @@ public class MovieInfo{
 	 * This field represents the id of the movie.
 	 */
 	private int id;
-	public static int base_id = 0;
 
 	/*
 	 * classified genre of the movie.
@@ -138,7 +137,7 @@ public class MovieInfo{
 	}
 
 	public int getId(){
-		return id;
+		return this.id;
 	}
 	
 	public void setId(int id){

@@ -1,3 +1,4 @@
+/*
 package io.github.newnc.util;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,12 @@ public class ContextRefreshedListener implements ApplicationListener<ContextRefr
 	public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
 		System.out.println("Context Refreshed");
 		
-		new MoviesService();
+		//MoviesService ms = new MoviesService();
+		
+		//ms.start();
 		
 		movieInitEvent.setEventFired(true);
 	}
 	
 }
+*/

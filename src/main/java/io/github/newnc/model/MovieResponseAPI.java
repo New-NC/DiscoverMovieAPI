@@ -72,7 +72,6 @@ public class MovieResponseAPI {
 		
 		new OverviewSearcher().execute(this.results);
 
-		Print.moviesTitleAndLabels(this.results);
 	}
 
 	public String stringify() {

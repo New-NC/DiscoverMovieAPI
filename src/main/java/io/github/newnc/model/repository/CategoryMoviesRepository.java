@@ -8,26 +8,9 @@ import java.util.Set;
 
 import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponse;
-import io.github.newnc.model.MovieResponseAPI;
-import io.github.newnc.util.DataReloadTimer;
-import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.KeyWordsList;
 
-/**
- * This class represents an in-memory repository of movies gets from TMDB API.
- *
- * This class implements the singleton pattern.
- *
- * @see <a href="http://www.oodesign.com/singleton-pattern.html">Singleton
-	 *      Pattern</a>
- */
-public class MovieRepository extends AbstractRepository{
-	/*
-		listAdventure
-		listAnimal
-		listPrincess
-		listTech
-	*/
+public class CategoryMoviesRepository extends MoviesRepository{
 
 	protected List<Integer> listAdventure;
 	protected List<Integer> listAnimal;
@@ -37,52 +20,18 @@ public class MovieRepository extends AbstractRepository{
 	protected int qtyCategories = 4;
 
 	protected KeyWordsList keyWordsList = new KeyWordsList();
-
-	/**
-	 * This fields represents a list of pages of the response from TMDB API.
-	 */
-	protected List<MovieResponse> movieResponsePages;
-
-	/**
-	 * Returns a specific <code>page</code> of this <code>MovieRepository
-	 * </code> instance.
-	 *
-	 * @param numPage
-	 *            the number of the <code>page</code>.
-	 * @return a specific <code>page</code> of this <code>MovieRepository
-	 * </code> instance.
-	 */
-	public MovieResponse getPage(int numPage){
-		int i;
-		for(i = 0; i < movieResponsePages.size(); i++)
-			if(movieResponsePages.get(i).getPage() == numPage) return movieResponsePages.get(i);
-
-		return null;
-	}
-
-	protected MovieResponse getMovieResponse(String apiResponse){
-
-		JsonObject jsonObjectFactory = new JsonObject();
-		// Here is where we create the first MovieInfo objects, and set their ids
-		MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse);
+	
+	@Override
+	public boolean isEmpty() {
+		System.out.println("CategoryMovies's isEmpty()");
 		
-		/*
-			******* DANGEROUS THINGS AHEAD *******
-		*/
-		List<MovieInfo> tempMI = movieData.getMovies();
-		for(MovieInfo mi : tempMI){
-			//mi.setId(MovieInfo.base_id);
-			MovieInfo.base_id++; // <-- CAREFUL WITH THIS!
-		}
-		/*
-			******* END OF DANGEROUS THINGS *******
-		*/
-		
-		movieData.labelMovies();
-
-		return MovieResponse.createMovieResponse(movieData);
+		return (movieResponsePages.isEmpty() ||
+				listAdventure.isEmpty() || 
+				listAnimal.isEmpty() || 
+				listPrincess.isEmpty() || 
+				listTech.isEmpty());
 	}
-
+	
 	protected boolean notFilledAllCategories(int[] qtyCat){
 		System.out.println("notFilledAllCategories(): qtyCat { "
 				+ qtyCat[0] + " " 
@@ -168,73 +117,30 @@ public class MovieRepository extends AbstractRepository{
 
 		return movieData;
 	}
-
-	@Override
-	public void updateIfNeeded() throws InterruptedException{
-		if(isEmpty()) update();
-	}
-
-	@Override
-	public void forceUpdate() throws InterruptedException{
-		clear();
-		update();
-	}
-
+	
 	@Override
 	public void clear(){
+		System.out.println("CategoryMovies's clear()");
+		
 		movieResponsePages.clear();
 		
 		listAdventure.clear();
 		listAnimal.clear();
 		listPrincess.clear();
 		listTech.clear();
-		
-		System.out.println("MovieRepository cleared");
-
-		setChanged();
-		notifyObservers();
 	}
-
+	
 	@Override
-	public boolean isEmpty(){
-		return movieResponsePages.isEmpty();
-	}
-
-	/**
-	 * This fields represents a instance of this class.
-	 */
-	private static MovieRepository instance;
-
-	/**
-	 * Returns an instance of this class.
-	 *
-	 * @return an instance of this class.
-	 */
-	public static synchronized MovieRepository getInstance(){
-		if(instance == null) instance = new MovieRepository();
-		return instance;
-	}
-
-	/**
-	 * Default constructor.
-	 */
-	protected MovieRepository(){
-		init();
-
-		addObserver(DataReloadTimer.getTimer());
-	}
-	
 	protected void init(){
-		System.out.println("Init called from "+this.getClass());
+		System.out.println("CategoryMovies's init, called from "+this.getClass());
 		
-		this.movieResponsePages = new ArrayList<>();
+		movieResponsePages = new ArrayList<>();
 		
-		this.listAdventure = new ArrayList<>();
-		this.listAnimal = new ArrayList<>();
-		this.listPrincess = new ArrayList<>();
-		this.listTech = new ArrayList<>();
+		listAdventure = new ArrayList<>();
+		listAnimal = new ArrayList<>();
+		listPrincess = new ArrayList<>();
+		listTech = new ArrayList<>();
 	}
-	
 	
 	public String getRandomCover(){
 		String s = "HITLERDIDNOTHINGWRONG";
@@ -251,19 +157,19 @@ public class MovieRepository extends AbstractRepository{
 		
 		switch(category){
 			case 0:
-				m = this.listAdventure;
+				m = listAdventure;
 				break;
 				
 			case 1:
-				m = this.listAnimal;
+				m = listAnimal;
 				break;
 				
 			case 2:
-				m = this.listPrincess;
+				m = listPrincess;
 				break;
 				
 			case 3:
-				m = this.listTech;
+				m = listTech;
 				break;
 		}
 		
@@ -352,36 +258,5 @@ public class MovieRepository extends AbstractRepository{
 		
 		return covers;
 	}
-	
-	
-	public MovieInfo findMovieById(int movie_id){
-		MovieInfo found_it = null;
 
-		// Busca em cada filme de cada página pelo filme que tenha o id procurado
-		for(MovieResponse mr : movieResponsePages){
-			
-			List<MovieInfo> tempListMI = mr.getMovies();
-			
-			for(MovieInfo mi : tempListMI){
-				if(mi.getId() == movie_id){
-					//System.out.println("FOUND SOMEONE "+mi.getId()+" "+mi.getTitle());
-					found_it = mi;
-					break;
-				}
-			}
-			
-			if(found_it != null){
-				break;
-			}
-		}
-		
-		return found_it;
-	}
-
-	@Override
-	protected void update() throws InterruptedException{
-		// Not used
-		
-	}
-	
 }

@@ -7,11 +7,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import io.github.newnc.debug.Print;
 import io.github.newnc.model.MovieInfo;
 import io.github.newnc.model.MovieResponse;
 import io.github.newnc.model.MovieResponseAPI;
-import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.util.JsonObject;
 import io.github.newnc.util.KeyWordsList;
 import io.github.newnc.util.TMDBRequester;
@@ -24,100 +22,123 @@ import io.github.newnc.util.TMDBRequester;
  * @see <a href="http://www.oodesign.com/singleton-pattern.html">Singleton
  *      Pattern</a>
  */
-public class CompanyMoviesRepository extends AbstractRepository{
+public class CompanyMoviesRepository extends MoviesRepository{
 	
-	protected List<Integer> listDisney = new ArrayList<Integer>();
-	protected List<Integer> listDreamworks = new ArrayList<Integer>();
-	protected List<Integer> listGhibili = new ArrayList<Integer>();
-	protected List<Integer> listPixar = new ArrayList<Integer>();
+	protected List<Integer> listDisney;
+	protected List<Integer> listDreamworks;
+	protected List<Integer> listGhibli;
+	protected List<Integer> listPixar;
 
 	protected int qtyCategories = 4;
 
 	protected KeyWordsList keyWordsList = new KeyWordsList();
-
+	
 	/**
-	 * This fields represents a list of pages of the response from TMDB API.
+	 * This fields represents a instance of this class.
 	 */
-	protected List<MovieResponse> movieResponsePages;
+	private static CompanyMoviesRepository instance;
 
 	/**
-	 * Returns a list of pages of this <code>CompanyMoviesRepository</code> instance.
+	 * Returns an instance of this class.
 	 *
-	 * @return a list of pages of this <code>CompanyMoviesRepository</code> instance.
+	 * @return an instance of this class.
 	 */
-	public List<MovieResponse> getPages(){
-		return movieResponsePages;
+	public static CompanyMoviesRepository getInstance(){
+		if(instance == null) 
+			instance = new CompanyMoviesRepository();
+		
+		return instance;
+	}
+	
+	@Override
+	public boolean isEmpty() {
+		System.out.println("CompanyMovies's isEmpty()");
+		
+		return (movieResponsePages.isEmpty() ||
+				listDisney.isEmpty() ||
+				listDreamworks.isEmpty() ||
+				listGhibli.isEmpty() ||
+				listPixar.isEmpty());
 	}
 
-	/**
-	 * Returns an iterator for the list of <code>pages</code> of this <code>
-	 * CompanyMoviesRepository</code> instance.
-	 *
-	 * @return an iterator for the list of <code>pages</code> of this <code>
-	 * CompanyMoviesRepository</code> instance.
-	 */
-	public Iterator<MovieResponse> getIterator(){
-		return movieResponsePages.iterator();
-	}
-
-	/**
-	 * Returns a specific <code>page</code> of this <code>CompanyMoviesRepository
-	 * </code> instance.
-	 *
-	 * @param numPage
-	 *            the number of the <code>page</code>.
-	 * @return a specific <code>page</code> of this <code>CompanyMoviesRepository
-	 * </code> instance.
-	 */
-	public MovieResponse getPage(int numPage){
-		int i;
-		for(i = 0; i < movieResponsePages.size(); i++)
-			if(movieResponsePages.get(i).getPage() == numPage) return movieResponsePages.get(i);
-
-		return null;
-	}
 
 	@Override
-	protected void update() throws InterruptedException{
-		Print.updateTime(this.getClass().getName());
+	protected void update(){
+		System.out.println("---- update() in CompanyMoviesRepository ----");
 
 		movieResponsePages = requestMovies();
-
-		setChanged();
-		notifyObservers();
 
 		System.out.println("---- end of update() in CompanyMoviesRepository -----");
 	}
 
 	protected List<MovieResponse> requestMovies(){
 		List<MovieResponse> list_movies = new ArrayList<>();
+		int i=1, j=1;
+		boolean ret;
+		
+		int qtyCat[] = new int[qtyCategories];
+		
+		qtyCat[0] = 0;
+		qtyCat[1] = 0;
+		qtyCat[2] = 0;
+		qtyCat[3] = 0;
+		
+		ret = notFilledAllCategories(qtyCat);
 
-		for(int i = 1; i <= TMDBRequester.MAXREQUEST/4; i++){
-			System.out.println("Get page: " + i);
-
-			String apiResponse = TMDBRequester.requestPageDisney(i);
-			MovieResponse movieReponse = getMovieResponse(apiResponse);
-			for (MovieInfo info : movieReponse.getMovies())
-				listDisney.add(info.getId());
-			list_movies.add(movieReponse);
+		while(ret){
 			
-			apiResponse = TMDBRequester.requestPageDreamworks(i);
-			movieReponse = getMovieResponse(apiResponse);
-			for (MovieInfo info : movieReponse.getMovies())
-				listDreamworks.add(info.getId());
-			list_movies.add(movieReponse);
+			while( i <= (j * TMDBRequester.MAXREQUEST/4) ){
+	
+				String apiResponse = TMDBRequester.requestPageDisney(i);
+				MovieResponse movieReponse = getMovieResponse(apiResponse);
+				
+				for (MovieInfo info : movieReponse.getMovies()){
+					listDisney.add(info.getId());
+					qtyCat[0]++;
+				}
+				list_movies.add(movieReponse);
+				
+				apiResponse = TMDBRequester.requestPageDreamworks(i);
+				movieReponse = getMovieResponse(apiResponse);
+				
+				for (MovieInfo info : movieReponse.getMovies()){
+					listDreamworks.add(info.getId());
+					qtyCat[1]++;
+				}
+				list_movies.add(movieReponse);
+				
+				apiResponse = TMDBRequester.requestPageGhibili(i);
+				movieReponse = getMovieResponse(apiResponse);
+				
+				for (MovieInfo info : movieReponse.getMovies()){
+					listGhibli.add(info.getId());
+					qtyCat[2]++;
+				}
+				list_movies.add(movieReponse);
+				
+				apiResponse = TMDBRequester.requestPagePixar(i);
+				movieReponse = getMovieResponse(apiResponse);
+				
+				for (MovieInfo info : movieReponse.getMovies()){
+					listPixar.add(info.getId());
+					qtyCat[3]++;
+				}
+				list_movies.add(movieReponse);
+				
+				i++;
+			}
 			
-			apiResponse = TMDBRequester.requestPageGhibili(i);
-			movieReponse = getMovieResponse(apiResponse);
-			for (MovieInfo info : movieReponse.getMovies())
-				listGhibili.add(info.getId());
-			list_movies.add(movieReponse);
-			
-			apiResponse = TMDBRequester.requestPagePixar(i);
-			movieReponse = getMovieResponse(apiResponse);
-			for (MovieInfo info : movieReponse.getMovies())
-				listPixar.add(info.getId());
-			list_movies.add(movieReponse);
+			ret = notFilledAllCategories(qtyCat);
+	
+			j++;
+	
+			try{
+				System.out.println("Waiting for the API request timelimit (10s)");
+				Thread.sleep(10000);
+			}catch(InterruptedException e){
+				System.out.println("Couldn't sleep");
+				e.printStackTrace();
+			}
 		}
 
 		return list_movies;
@@ -128,20 +149,6 @@ public class CompanyMoviesRepository extends AbstractRepository{
 		JsonObject jsonObjectFactory = new JsonObject();
 		// Here is where we create the first MovieInfo objects, and set their ids
 		MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse);
-		
-		/*
-			******* DANGEROUS THINGS AHEAD *******
-		*/
-		List<MovieInfo> tempMI = movieData.getMovies();
-		if(tempMI == null) System.out.println("tempMI is null!");
-		else
-			for(MovieInfo mi : tempMI){
-				mi.setId(MovieInfo.base_id);
-				MovieInfo.base_id++; // <-- CAREFUL WITH THIS MOTHERFUCKER !
-			}
-		/*
-			******* END OF DANGEROUS THINGS *******
-		*/
 		
 		movieData.labelMovies();
 
@@ -228,63 +235,11 @@ public class CompanyMoviesRepository extends AbstractRepository{
 		}
 
 		for(Integer id : ghibiliMovieIds){
-			listGhibili.add(id);
+			listGhibli.add(id);
 		}
-
-		//Print.labelsPerPage(listAdventure, listAnimal, listPrincess, listTech);
 
 		return movieData;
 	}
-
-	@Override
-	public void updateIfNeeded() throws InterruptedException{
-		if(isEmpty()) update();
-	}
-
-	@Override
-	public void forceUpdate() throws InterruptedException{
-		clear();
-
-		update();
-	}
-
-	@Override
-	public void clear(){
-		movieResponsePages.clear();
-
-		setChanged();
-		notifyObservers();
-	}
-
-	@Override
-	public boolean isEmpty(){
-		return movieResponsePages.isEmpty();
-	}
-
-	/**
-	 * This fields represents a instance of this class.
-	 */
-	private static CompanyMoviesRepository instance;
-
-	/**
-	 * Returns an instance of this class.
-	 *
-	 * @return an instance of this class.
-	 */
-	public static synchronized CompanyMoviesRepository getInstance(){
-		if(instance == null) instance = new CompanyMoviesRepository();
-		return instance;
-	}
-
-	/**
-	 * Default constructor.
-	 */
-	protected CompanyMoviesRepository(){
-		movieResponsePages = new ArrayList<>();
-
-		addObserver(DataReloadTimer.getTimer());
-	}
-	
 	
 	public String getRandomCover(){
 		String s = "HARAMBEDIEDFOROURSINS";
@@ -313,7 +268,7 @@ public class CompanyMoviesRepository extends AbstractRepository{
 				break;
 				
 			case 3:
-				m = this.listGhibili;
+				m = this.listGhibli;
 				break;
 		}
 		
@@ -355,8 +310,8 @@ public class CompanyMoviesRepository extends AbstractRepository{
 
 		it=0;
 		do{
-			random_pos = r.nextInt(this.listGhibili.size());
-			covers[3] = findMovieById(listGhibili.get(random_pos)).getPoster_path();
+			random_pos = r.nextInt(this.listGhibli.size());
+			covers[3] = findMovieById(listGhibli.get(random_pos)).getPoster_path();
 			it++;
 		} while((covers[3].equals(covers[0]) || covers[3].equals(covers[1]) || covers[3].equals(covers[2])) && it<max);
 		
@@ -380,7 +335,7 @@ public class CompanyMoviesRepository extends AbstractRepository{
 				m = this.listDreamworks;
 				break;
 			case 3:
-				m = this.listGhibili;
+				m = this.listGhibli;
 				break;
 		}
 			
@@ -419,6 +374,28 @@ public class CompanyMoviesRepository extends AbstractRepository{
 		}
 		
 		return this_movie;
+	}
+	
+	@Override
+	protected void init(){
+		System.out.println("CompanyMovies's init, called from "+this.getClass());
+		
+		movieResponsePages = new ArrayList<>();
+		
+		listDisney = new ArrayList<>();
+		listDreamworks = new ArrayList<>();
+		listGhibli = new ArrayList<>();
+		listPixar = new ArrayList<>();
+	}
+	
+	@Override
+	public void clear(){
+		movieResponsePages.clear();
+		
+		listDisney.clear();
+		listDreamworks.clear();
+		listGhibli.clear();
+		listPixar.clear();
 	}
 	
 }

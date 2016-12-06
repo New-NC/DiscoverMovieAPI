@@ -1,54 +1,34 @@
 package io.github.newnc.util;
 
-import java.util.Observable;
-import java.util.Observer;
+import java.util.ArrayList;
+import java.util.List;
 
-import io.github.newnc.model.repository.AbstractRepository;
+import io.github.newnc.model.repository.MoviesRepository;
 
-public class DataReloadTimer<T extends AbstractRepository> implements Observer, Runnable{
+public class DataReloadTimer implements Runnable{
 
 	// Atributos
 	
-	private static DataReloadTimer<? extends AbstractRepository> instance;
+	private static DataReloadTimer instance;
 
-	private AbstractRepository repository;
+	private List<MoviesRepository> repositories;
 	
 	private Thread thread;
 	
 	
 	// Metodos
 
-	public static <T extends AbstractRepository> DataReloadTimer<? extends AbstractRepository> getTimer(){
-		if(instance == null) instance = new DataReloadTimer<T>();
+	public static DataReloadTimer getTimer(){
+		if(instance == null) instance = new DataReloadTimer();
 		return instance;
 	}
 
 	private DataReloadTimer(){
 		System.out.println("DataReloadTimer()");
-		repository = null;
+		repositories = new ArrayList<>();
 		thread = new Thread(this);
 		
 		thread.start();
-		
-	}
-
-	/* Metodo de Observer */
-	@Override
-	public void update(Observable o, Object obj){
-		repository = (AbstractRepository) o;
-
-		try{
-			thread.interrupt();
-			
-			System.out.println("Creating new Thread");
-			
-			thread = new Thread(this);
-			thread.start();
-			
-			System.out.println("Tread theoretically started(): "+thread.toString());
-		}catch(Exception e){
-			e.printStackTrace();
-		}
 	}
 
 	/* Metodo de Thread */
@@ -59,7 +39,7 @@ public class DataReloadTimer<T extends AbstractRepository> implements Observer, 
 		long seg = 1000 * ms;
 		long min = 60 * seg;
 		long hora = 60 * min;
-		long dia = 24*hora;
+		//long dia = 24*hora;
 
 		try{
 			
@@ -67,8 +47,11 @@ public class DataReloadTimer<T extends AbstractRepository> implements Observer, 
 				System.out.println("DataReloadTimer>run() "+System.currentTimeMillis());
 				Thread.sleep(hora);
 				
-				if(repository != null){
-					repository.forceUpdate();
+				synchronized(this){
+					if(repositories.isEmpty()){
+						for(MoviesRepository r : repositories)
+							r.forceUpdate();
+					}	
 				}
 			}
 			

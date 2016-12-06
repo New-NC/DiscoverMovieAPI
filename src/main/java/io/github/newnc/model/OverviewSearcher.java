@@ -70,8 +70,6 @@ public class OverviewSearcher {
 			}
 			
 			m.setLabels(keywords_by_movie);
-
-			Print.howManyLabels(movies);
 		}
 	}
 

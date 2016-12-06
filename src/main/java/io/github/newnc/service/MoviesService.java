@@ -13,20 +13,22 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.github.newnc.model.MovieResponse;
+import io.github.newnc.model.repository.MoviesRepository;
+import io.github.newnc.model.repository.NewestMoviesRepository;
+import io.github.newnc.model.repository.TopRatedMoviesRepository;
+import io.github.newnc.util.DataReloadTimer;
 import io.github.newnc.model.repository.CompanyMoviesRepository;
-import io.github.newnc.model.repository.MovieRepository;
-import io.github.newnc.model.repository.NewestMovieRepository;
-import io.github.newnc.model.repository.TopRatedMovieRepository;
 
 @RestController
 public class MoviesService {
+	
+	/*
+		ESTA É NOSSA CLASSE PRINCIPAL, E DEVE SER RESPEITADA E TRATADA COM CARINHO
+	*/
 
-	private List<MovieRepository> repositories;
-	private CompanyMoviesRepository companyMoviesRepository;
+	private List<MoviesRepository> repositories = null;
 
 	private int n_categories = 4;
-
-	private boolean debug = true;
 
 	
 	public MoviesService() {
@@ -36,34 +38,44 @@ public class MoviesService {
 		// io.github.newnc.debug.Print.activate();
 
 		repositories = new ArrayList<>();
-
-		repositories.add(NewestMovieRepository.getInstance());
-		repositories.add(TopRatedMovieRepository.getInstance());
+		
+		start();
+		
+		DataReloadTimer.getTimer();
+		
+	}
+	
+	
+	public void start(){
+		boolean flag_npe;
+		
+		repositories.add(NewestMoviesRepository.getInstance());
+		repositories.add(TopRatedMoviesRepository.getInstance());
+		repositories.add(CompanyMoviesRepository.getInstance());
 
 		try {
-			boolean npe = true;
-			for (MovieRepository r : repositories)
-				while (npe) {
-					npe = false;
+			
+			for (MoviesRepository r : repositories){
+				
+				System.out.println("Calling updateIfNeeded() in "+r.getClass());
+				
+				flag_npe = true;
+				
+				while (flag_npe) {
+					
+					flag_npe = false;
+					
 					try {
 						r.updateIfNeeded();
 					} catch (NullPointerException e) {
-						npe = true;
+						flag_npe = true;
 						e.printStackTrace();
 					}
+					
 				}
-			
-			companyMoviesRepository = CompanyMoviesRepository.getInstance();
-			npe = true;
-			while (npe) {
-				npe = false;
-				try {
-					companyMoviesRepository.updateIfNeeded();
-				} catch (NullPointerException e) {
-					npe = true;
-					e.printStackTrace();
-				}
+				
 			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -71,16 +83,17 @@ public class MoviesService {
 
 	@RequestMapping(value = "/movies", method = RequestMethod.GET)
 	public MovieResponse[] movies() {
-		if (debug)
-			System.out.println("movies()");
+		System.out.println("movies()");
 
-		for (MovieRepository r : repositories) {
+		/* not needed anymore
+		for (MoviesRepository r : repositories) {
 			try {
 				r.updateIfNeeded();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
+		//*/
 
 		MovieResponse[] movieData = { repositories.get(0).getPage(1), repositories.get(1).getPage(1) };
 
@@ -89,11 +102,10 @@ public class MoviesService {
 
 	@RequestMapping(value = "/movies/covers", method = RequestMethod.GET)
 	public String[] covers(HttpServletResponse response) {
-		if (debug)
-			System.out.println("/movies/covers");
+		System.out.println("/movies/covers");
 
 		String[] covers;
-		int numRepos = repositories.size();
+		int numRepos = repositories.size() - 1; // -1 because of companymovies
 
 		covers = new String[numRepos];
 
@@ -124,7 +136,7 @@ public class MoviesService {
 
 		String[] covers = new String[n_categories];
 
-		MovieRepository repo = null;
+		MoviesRepository repo = null;
 		switch (repositoryId) {
 		case 0:
 			repo = repositories.get(repositoryId);
@@ -144,10 +156,9 @@ public class MoviesService {
 
 	@RequestMapping(value = "/movies/companies", method = RequestMethod.GET)
 	public String[] companies(HttpServletResponse response) {
-		if (debug)
-			System.out.println("/movies/companies");
+		System.out.println("/movies/companies");
 
-		String[] companies = companyMoviesRepository.getRandomCoversFromEachCategory();
+		String[] companies = repositories.get(2).getRandomCoversFromEachCategory();
 
 		for (int i = 0; i < 4; i++) {
 			if (companies[i] == null || companies[i].isEmpty()) {
@@ -166,7 +177,7 @@ public class MoviesService {
 
 		String[] covers = new String[5];
 
-		MovieRepository repo = null;
+		MoviesRepository repo = null;
 		switch (repositoryId) {
 		case 0:
 			repo = repositories.get(repositoryId);
@@ -186,7 +197,7 @@ public class MoviesService {
 
 	@RequestMapping(value = "/reload", method = RequestMethod.GET)
 	public void reload() {
-		for (MovieRepository mR : repositories) {
+		for (MoviesRepository mR : repositories) {
 			try {
 				mR.forceUpdate();
 			} catch (Exception e) {
@@ -197,9 +208,9 @@ public class MoviesService {
 
 	@RequestMapping(value = "/clear", method = RequestMethod.GET)
 	public void clear() {
-		Iterator<MovieRepository> repository = repositories.iterator();
+		Iterator<MoviesRepository> repository = repositories.iterator();
+		
 		while (repository.hasNext())
-			((MovieRepository) repository.next()).clear();
-		;
+			((MoviesRepository) repository.next()).clear();
 	}
 }

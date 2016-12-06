@@ -1,3 +1,4 @@
+/*
 package io.github.newnc.util;
 
 import org.springframework.stereotype.Component;
@@ -15,3 +16,4 @@ public class MovieInitEvent {
 		this.eventFired = ef;
 	}
 }
+*/
