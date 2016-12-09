@@ -61,7 +61,7 @@ public class KeyWordsList {
 		good.add(s);
 		animal.add(s);
 
-		s = "MONSTER";
+		s = "GIANT";
 		good.add(s);
 		adventure.add(s);
 
@@ -172,6 +172,11 @@ public class KeyWordsList {
 		s = "MULAN";
 		good.add(s);
 		adventure.add(s);
+		
+		s = "KINDHEARTED";
+		good.add(s);
+		adventure.add(s);
+		
 
 		// key_words_good.add("MOTHA_FUCKIN_DRAGONS");
 
@@ -208,6 +213,30 @@ public class KeyWordsList {
 		bad.add("EVIL");
 		bad.add("PARANORMAL");
 		bad.add("FRANKENSTEIN");
+		bad.add("YOUTUBE'S");
+		bad.add("SLAVERY");
+		bad.add("WINE");
+		bad.add("DIVORCED");
+		bad.add("SYNDROME");
+		bad.add("CHIKARA");
+		bad.add("NO VIDEO");
+		bad.add("VIRUS");
+		bad.add("WEAPON");
+		bad.add("TRAGICOMIC");
+		bad.add("MY LITTLE PONY");
+		bad.add("NIGHT CLUB");
+		bad.add("MUSICAL");
+		bad.add("STUDENT FILM");
+		bad.add("GRADUATE");
+		bad.add("TRAGICALLY");
+		bad.add("BEFIKRE");
+		bad.add("SLAY");
+		bad.add("SLAVE");
+		bad.add("PRISONER");
+		bad.add("BLOODY");
+		bad.add("HELLHOUND");
+		bad.add("MAN-EATING");
+		
 		
 	}
 

@@ -3,7 +3,6 @@ package io.github.newnc.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.newnc.debug.Print;
 import io.github.newnc.util.KeyWordsList;
 
 /*
@@ -37,12 +36,11 @@ public class OverviewSearcher {
 
 			/* Stores the good keywords */
 			for(String key_word : keyWordsGoodList){
-				if( ov.contains(" "+key_word+" ") ||
+				if( title.contains(key_word+" ") ||
+					ov.contains(" "+key_word+" ") ||
 					ov.contains(" "+key_word+",") ||
 					ov.contains(" "+key_word+".") ||
-					ov.contains(" "+key_word+"S") ||
-					
-					title.contains(key_word+" ")){ // change to space at begin too if problems occur
+					ov.contains(" "+key_word+"S") ){
 
 					keywords_by_movie.add(key_word);
 				}
@@ -57,12 +55,12 @@ public class OverviewSearcher {
 
 			/* If there's any of the bad ones, clear and break */
 			for(String key_word : keyWordsBadList){
-				if( ov.contains(" "+key_word+" ") ||
+				if( title.contains(key_word) ||
+					ov.contains(" "+key_word+" ") ||
 					ov.contains(" "+key_word+",") ||
 					ov.contains(" "+key_word+".") ||
-					ov.contains(" "+key_word+"S") ||
-					
-					title.contains(key_word)){
+					ov.contains(" "+key_word+"S")
+					){
 
 					keywords_by_movie.clear();
 					break;
