@@ -41,7 +41,7 @@ public class MoviesService {
 		
 		start();
 		
-		DataReloadTimer.getTimer();
+		DataReloadTimer dataReloadTimer = new DataReloadTimer(repositories);
 		
 	}
 	

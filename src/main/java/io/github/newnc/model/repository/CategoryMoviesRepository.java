@@ -47,6 +47,11 @@ public class CategoryMoviesRepository extends MoviesRepository{
 	protected MovieResponse categorySetter(String apiResponse, int[] qty){
 
 		MovieResponse movieData = getMovieResponse(apiResponse);
+		
+		if(movieData == null){
+			System.out.println("movieData is null at categotySetter(), returning null");
+			return null;
+		}
 
 		Set<Integer> adventureMovieIds = new HashSet<Integer>();
 		Set<Integer> animalMovieIds = new HashSet<Integer>();

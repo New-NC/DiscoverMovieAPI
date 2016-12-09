@@ -27,30 +27,51 @@ public class TMDBRequester {
 	}
 
 	public static String requestPageTopRated(int page) {
-		try {
-			HttpResponse<JsonNode> response =
-					Unirest.get("https://api.themoviedb.org/3/discover/movie"
-							+ "?api_key=" + APIKEY
-							+ "&certification_country=US&certification.lte=G"
-							+ "&sort_by=popularity.desc&page=" + page).asJson();
-			return response.getBody().toString();
-		} catch (UnirestException e) {
-			e.printStackTrace();
-		}
-		return null;
+		String s = "https://api.themoviedb.org/3/discover/movie"
+				+ "?api_key=" + APIKEY
+				+ "&certification_country=US&certification.lte=G"
+				+ "&sort_by=popularity.desc&page=" + page;
+		return requestPage(s);
 	}
 
 	public static String requestPageNewest(int page ){
-		try {
-			HttpResponse<JsonNode> response =
-					Unirest.get("https://api.themoviedb.org/3/discover/movie"
-							+ "?api_key=" + APIKEY
-							+ "&certification_country=US&certification.lte=G"
-							+ "&sort_by=release_date.desc&page=" + page).asJson();
-			return response.getBody().toString();
-		} catch (UnirestException e) {
-			e.printStackTrace();
+		String s = "https://api.themoviedb.org/3/discover/movie"
+				+ "?api_key=" + APIKEY
+				+ "&certification_country=US&certification.lte=G"
+				+ "&sort_by=release_date.desc&page=" + page;
+		
+		return requestPage(s);
+	}
+	
+	private static String requestPage(String s){
+		
+		HttpResponse<JsonNode> response = null;
+		boolean f = true;
+		int c = 0;
+		
+		while(f && c<50){
+			f = false;
+			
+			try {
+				
+				response = Unirest.get(s).asJson();
+
+				// System.out.format("%2d >> No UnknowHostException apparently\n", c);
+				
+				return response.getBody().toString();
+
+			} catch (Exception e) {
+				
+				f = true;
+				System.out.println("c: "+c++);
+				
+				System.out.println("Exception at requestPage()"
+						+ ", it's either Unirest or UnknownHost Exception");
+				//e.printStackTrace();
+			}
+			
 		}
+		
 		return null;
 	}
 	
@@ -71,17 +92,12 @@ public class TMDBRequester {
 	}
 
 	public static String requestPageCompanyBased(int page, int company){
-		try {
-			HttpResponse<JsonNode> response =
-					Unirest.get("https://api.themoviedb.org/3/discover/movie"
-							+ "?api_key=" + APIKEY
-							+ "&certification_country=US&certification.lte=G"
-							+ "&with_company=" + company + "&page=" + page).asJson();
-			return response.getBody().toString();
-		} catch (UnirestException e) {
-			e.printStackTrace();
-		}
-		return null;
+		String s = "https://api.themoviedb.org/3/discover/movie"
+				+ "?api_key=" + APIKEY
+				+ "&certification_country=US&certification.lte=G"
+				+ "&with_company=" + company + "&page=" + page;
+		
+		return requestPage(s);
 	}
 
 }

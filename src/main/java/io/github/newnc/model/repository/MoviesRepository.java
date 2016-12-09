@@ -119,17 +119,10 @@ public class MoviesRepository extends AbstractRepository{
 		// Here is where we create the first MovieInfo objects, and set their ids
 		MovieResponseAPI movieData = jsonObjectFactory.createObject(apiResponse);
 		
-		/*
-			******* DANGEROUS THINGS AHEAD *******
-		/
-		List<MovieInfo> tempMI = movieData.getMovies();
-		for(MovieInfo mi : tempMI){
-			//mi.setId(MovieInfo.base_id);
-			MovieInfo.base_id++; // <-- CAREFUL WITH THIS!
+		if(movieData == null){
+			System.out.println("movieData is null, returning null");
+			return null;
 		}
-		/*
-			******* END OF DANGEROUS THINGS *******
-		*/
 		
 		movieData.labelMovies();
 
